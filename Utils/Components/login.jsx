@@ -1,13 +1,42 @@
 import { LockOutlined, UserOutlined } from "@ant-design/icons";
-import { Button, Checkbox, Form, Input } from "antd";
-import React from "react";
+import { Button, Checkbox, Form, Input, notification, Space } from "antd";
+import React, { useState } from "react";
+import { createUserWithEmailAndPassword } from "firebase/auth";
+import { auth } from "../firebase-config.jsx";
 
 const Login = () => {
+  const [formData, setFormData] = useState(null);
+  const register = async () => {
+    try {
+      const user = await createUserWithEmailAndPassword(
+        auth,
+        formData.Email,
+        formData.Password
+      );
+      user.then((eve) => {
+        console.log(eve);
+      });
+
+      openNotificationWithIcon("sucess");
+      navigate("Home");
+    } catch (error) {
+      openNotificationWithIcon("error", error.message);
+      console.log(error);
+    }
+  };
   const onFinish = (values) => {
+    setFormData(values);
     console.log("Received values of form: ", values);
   };
+  const openNotificationWithIcon = (type, message = "SignUp Sucessfull") => {
+    notification[type]({
+      message: message,
+      description:
+        "This is the content of the notification. This is the content of the notification. This is the content of the notification.",
+    });
+  };
   return (
-    <div className="h-1/2 w-1/3 mx-auto shadow border p-4">
+    <div className="h-auto w-auto md:h-1/2 md:w-1/2 mx-auto shadow border p-4">
       <h1 className="w-1/2 mx-auto text-center">login form</h1>
       <Form
         name="normal_login"

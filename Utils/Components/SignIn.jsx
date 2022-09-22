@@ -2,9 +2,12 @@ import { LockOutlined, UserOutlined } from "@ant-design/icons";
 import { Button, Checkbox, Form, Input } from "antd";
 import React from "react";
 
-const SignIn = () => {
+const SignIn = (props) => {
+  console.log(props.change_Next);
+
   const onFinish = (values) => {
     console.log("Received values of form: ", values);
+    props.change_Next();
   };
   return (
     <div className="h-1/2 w-1/3 mx-auto shadow border p-4">
@@ -18,34 +21,62 @@ const SignIn = () => {
         onFinish={onFinish}
       >
         <Form.Item
-          name="username"
+          name="email"
+          label="E-mail"
           rules={[
             {
-              required: true,
-              message: "Please input your Username!",
+              type: "email",
+              message: "The input is not valid E-mail!",
+            },
+            {
+              required: false,
+              message: "Please input your E-mail!",
             },
           ]}
         >
-          <Input
-            prefix={<UserOutlined className="site-form-item-icon" />}
-            placeholder="Username"
-          />
+          <Input />
         </Form.Item>
         <Form.Item
           name="password"
+          label="Password"
           rules={[
             {
-              required: true,
-              message: "Please input your Password!",
+              required: false,
+              message: "Please input your password!",
             },
           ]}
+          hasFeedback
         >
-          <Input
-            prefix={<LockOutlined className="site-form-item-icon" />}
-            type="password"
-            placeholder="Password"
-          />
+          <Input.Password />
         </Form.Item>
+
+        <Form.Item
+          name="confirmPassword"
+          label="Confirm Password"
+          dependencies={["password"]}
+          hasFeedback
+          rules={[
+            {
+              required: false,
+              message: "Please confirm your password!",
+            },
+            ({ getFieldValue }) => ({
+              validator(_, value) {
+                if (!value || getFieldValue("password") === value) {
+                  return Promise.resolve();
+                }
+
+                return Promise.reject(
+                  new Error("The two passwords that you entered do not match!")
+                );
+              },
+            }),
+          ]}
+        >
+          <Input.Password />
+        </Form.Item>
+
+        <p>required set to false</p>
         <Form.Item>
           <div className="text-left">
             <Form.Item name="remember" valuePropName="checked" noStyle>
@@ -65,7 +96,7 @@ const SignIn = () => {
             htmlType="submit"
             className="login-form-button w-[100%]"
           >
-            Log in
+            Sign Up
           </Button>
           Or <a href="">register now!</a>
         </Form.Item>
