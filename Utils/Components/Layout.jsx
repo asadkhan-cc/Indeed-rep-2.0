@@ -6,14 +6,22 @@ import {
   InfoCircleOutlined,
   TeamOutlined,
   UserOutlined,
+  LogoutOutlined,
+  LoginOutlined,
 } from "@ant-design/icons";
 import { Breadcrumb, Layout, Menu } from "antd";
 import Image from "next/image";
 import Logo from "../../public/logo.jpg";
 import MenuItem from "antd/lib/menu/MenuItem";
 import Link from "next/link";
+import { onAuthStateChanged } from "firebase/auth";
+import { auth } from "../../FirebaseApp/firebase-config";
 
 function SiteLayout({ children }) {
+  const [user, setUser] = useState({});
+  onAuthStateChanged(auth, (user) => setUser(user));
+  console.log(user, "loging Users");
+
   const [collapsed, setCollapsed] = useState(false);
   const { Header, Content, Footer, Sider } = Layout;
   // return (
@@ -31,7 +39,7 @@ function SiteLayout({ children }) {
       path,
     };
   }
-
+  // if user not loggedin use Item1
   const items1 = [
     getItem(
       "Home",
@@ -74,7 +82,7 @@ function SiteLayout({ children }) {
       "4",
       <Link href={"/Login"}>
         <div className="w-[200px] mx-auto h-auto">
-          <UserOutlined />
+          <LoginOutlined />
           <span> Login</span>
         </div>
       </Link>,
@@ -93,18 +101,7 @@ function SiteLayout({ children }) {
       null,
       "/SignUp"
     ),
-    getItem(
-      "",
-      "6",
-      <Link href={"/Dashboard"}>
-        <div className="w-[200px] mx-auto h-auto">
-          <DesktopOutlined />
-          <span> Dashboard</span>
-        </div>
-      </Link>,
-      null,
-      "/Dashboard"
-    ),
+
     // getItem("Home", "sub1", <UserOutlined />, [
     //   getItem("Tom", "3"),
     //   getItem("Bill", "4"),
@@ -157,24 +154,36 @@ function SiteLayout({ children }) {
       "4",
       <Link href={"/Login"}>
         <div className="w-[200px] mx-auto h-auto">
-          <UserOutlined />
-          <span> Login</span>
+          <LogoutOutlined />
+          <span> Logout</span>
         </div>
       </Link>,
       null,
       "/Login"
     ),
     getItem(
-      "Join Us",
+      "",
       "5",
-      <Link href={"/SignUp"}>
+      <Link href={"/profile"}>
         <div className="w-[200px] mx-auto h-auto">
-          <TeamOutlined />
-          <span> Join Us</span>
+          <UserOutlined />
+          <span> profile</span>
         </div>
       </Link>,
       null,
       "/SignUp"
+    ),
+    getItem(
+      "",
+      "6",
+      <Link href={"/Dashboard"}>
+        <div className="w-[200px] mx-auto h-auto">
+          <DesktopOutlined />
+          <span> Dashboard</span>
+        </div>
+      </Link>,
+      null,
+      "/Dashboard"
     ),
   ];
 
@@ -195,7 +204,7 @@ function SiteLayout({ children }) {
           <div className=" mt-2 mx-auto w-36">
             <Image src={Logo} alt="logo-Image" width={70} height={70} />
           </div>
-          {false ? (
+          {true ? (
             <Menu
               theme="dark"
               defaultSelectedKeys={["2"]}

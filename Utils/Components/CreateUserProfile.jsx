@@ -22,36 +22,36 @@ import { async } from "@firebase/util";
 const { TextArea } = Input;
 
 export const CreateUserProfile = () => {
-  console.log(auth, "Real Auth");
-  console.log(auth.currentUser?.email);
+  const Role = "User";
+  // console.log(auth, "Real Auth");
+  // console.log(auth.currentUser?.email);
+  function valueChecker(param) {
+    Object.keys(param).forEach((key) => {
+      if (param[key] === undefined) {
+        param[key] = "null";
+      }
+    });
+  }
 
   const onSubmitHandeler = async (values) => {
     console.log(values, "Finish Button Pressed");
+    valueChecker(values);
+    values.DOB = values.DOB._d;
 
-    Object.keys(values).forEach((key) => {
-      if (values[key] === undefined) {
-        values[key] = "null";
-      }
-    });
-    console.log(values);
+    values = {
+      ...values,
 
-    // const obj = {
-    //   first: "Aasdasdasdda",
-    //   last: "Lovasdasdadsasdelace",
-    //   born: 1815,
-    //   bornasd: "181asd5",
-    //   borasdn: "18asdas15",
-    //   boasdrn: "18asdas15",
-    //   borasdn: "181asd5",
-    // };
+      role: Role,
+      email: auth.currentUser?.email,
+      isadmin: true,
+    };
+    console.log("after change", values);
+
     try {
       const docRef = await setDoc(
         doc(db, "users", auth.currentUser?.email),
-
         values
-      ).then((eve) => {
-        console.log(eve, "Catching Event here");
-      });
+      );
       console.log("Document written with ID: ", docRef);
     } catch (e) {
       console.error("Error adding document: ", e);
@@ -70,6 +70,7 @@ export const CreateUserProfile = () => {
             // onValuesChange={null}
             // disabled={false}
             onFinish={onSubmitHandeler}
+            initialValues={null}
           >
             {/* Checking Admin Status To condition Render Activation */}
             {true ? (
@@ -77,6 +78,7 @@ export const CreateUserProfile = () => {
                 name={"profileActivate"}
                 label="Switch"
                 valuePropName="checked"
+                initialValue={false}
               >
                 <Switch />
               </Form.Item>
@@ -151,6 +153,7 @@ export const CreateUserProfile = () => {
             <div className="flex justify-center align-middle">
               <Form.Item
                 name="agreement"
+                initialValue={false}
                 valuePropName="checked"
                 rules={[
                   {

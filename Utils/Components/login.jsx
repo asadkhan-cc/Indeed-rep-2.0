@@ -1,22 +1,20 @@
 import { LockOutlined, UserOutlined } from "@ant-design/icons";
 import { Button, Checkbox, Form, Input, notification, Space } from "antd";
 import React, { useState } from "react";
-import { createUserWithEmailAndPassword } from "firebase/auth";
-import { auth } from "../firebase-config.jsx";
-
+import { logInWithEmailAndPassword } from "../../FirebaseApp/firebase-config.jsx";
 const Login = () => {
+  logInWithEmailAndPassword;
   const [formData, setFormData] = useState(null);
   const register = async () => {
     try {
-      const user = await createUserWithEmailAndPassword(
-        auth,
+      const user = await logInWithEmailAndPassword(
         formData.Email,
         formData.Password
       );
       user.then((eve) => {
         console.log(eve);
       });
-
+      console.log("user from login page", user);
       openNotificationWithIcon("sucess");
       navigate("Home");
     } catch (error) {
