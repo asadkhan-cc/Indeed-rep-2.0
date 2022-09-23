@@ -15,122 +15,165 @@ import {
   Checkbox,
   Upload,
 } from "antd";
+import { auth, db } from "../../FirebaseApp/firebase-config";
+import { addDoc, collection, doc, setDoc } from "firebase/firestore";
+import { async } from "@firebase/util";
 
 const { TextArea } = Input;
 
 export const CreateUserProfile = () => {
-  const onSubmitHandeler = (values) => {
+  console.log(auth, "Real Auth");
+  console.log(auth.currentUser?.email);
+
+  const onSubmitHandeler = async (values) => {
     console.log(values, "Finish Button Pressed");
+
+    Object.keys(values).forEach((key) => {
+      if (values[key] === undefined) {
+        values[key] = "null";
+      }
+    });
+    console.log(values);
+
+    // const obj = {
+    //   first: "Aasdasdasdda",
+    //   last: "Lovasdasdadsasdelace",
+    //   born: 1815,
+    //   bornasd: "181asd5",
+    //   borasdn: "18asdas15",
+    //   boasdrn: "18asdas15",
+    //   borasdn: "181asd5",
+    // };
+    try {
+      const docRef = await setDoc(
+        doc(db, "users", auth.currentUser?.email),
+
+        values
+      ).then((eve) => {
+        console.log(eve, "Catching Event here");
+      });
+      console.log("Document written with ID: ", docRef);
+    } catch (e) {
+      console.error("Error adding document: ", e);
+    }
   };
-  const onFinish = (values) => {
-    console.log("Received values of form: ", values);
-    // props.change_Next();
-  };
+
   return (
     <>
       <div>
         <p className="text-center">CreateUserProfile</p>
-
-        <Form
-          labelCol={{ span: 4 }}
-          wrapperCol={{ span: 14 }}
-          layout="horizontal"
-          onValuesChange={null}
-          disabled={false}
-          onFinish={onFinish}
-        >
-          {/* Checking Admin Status To condition Render Activation */}
-          {true ? (
-            <Form.Item label="Switch" valuePropName="checked">
-              <Switch />
-            </Form.Item>
-          ) : null}
-          {/* ----------------------------------------------------------------------------------------------------- */}
-          <Form.Item label="Name">
-            <Input />
-          </Form.Item>
-          <Form.Item label="Mobile">
-            <Input type="number" />
-          </Form.Item>
-          <Form.Item label="Date Of Birth">
-            <DatePicker />
-          </Form.Item>
-          <Form.Item label="CNIC">
-            <InputNumber
-              max={9999999999999}
-              min={1111111111111}
-              maxLength={13}
-              // type={"number"}
-              style={{ width: "100%" }}
-              // className="w-5/6"
-            />
-          </Form.Item>
-          <Form.Item label="City">
-            <Select>
-              <Select.Option value="Karachi">Karachi</Select.Option>
-              <Select.Option value="Lahore">Lahore</Select.Option>
-              <Select.Option value="Hyderabad">Hyderabad</Select.Option>
-              <Select.Option value="Islamabad">Islamabad</Select.Option>
-              <Select.Option value="Quetta">Quetta</Select.Option>
-              <Select.Option value="Peshawar">Peshawar</Select.Option>
-            </Select>
-          </Form.Item>
-          <Form.Item label="Address">
-            <Input type="text" />
-          </Form.Item>
-          <Form.Item label="About">
-            <TextArea rows={4} />
-          </Form.Item>
-          <Form.Item label="University">
-            <Select>
-              <Select.Option value="Karachi University">
-                Karachi University
-              </Select.Option>
-              <Select.Option value="Iqra University">
-                Iqra University
-              </Select.Option>
-              <Select.Option value="IBA">IBA</Select.Option>
-              <Select.Option value="LUMS">LUMS</Select.Option>
-              <Select.Option value="Fast">Fast</Select.Option>
-              <Select.Option value="Fuuast">Fuuast</Select.Option>
-            </Select>
-          </Form.Item>
-          <Form.Item label="Degree">
-            <Select>
-              <Select.Option value="BSSE">BSSE</Select.Option>
-              <Select.Option value="BSCS">BSCS</Select.Option>
-              <Select.Option value="BBA">BBA</Select.Option>
-              <Select.Option value="B.Com">B.Com</Select.Option>
-              <Select.Option value="BA">BA</Select.Option>
-              <Select.Option value="Engineering">Engineering</Select.Option>
-            </Select>
-          </Form.Item>
-          <Form.Item label="CGPA">
-            <InputNumber max={4.0} min={0} />
-          </Form.Item>
-          {/* ----------------------------------------------------------------------------------------------------- */}
-          <Form.Item
-            name="agreement"
-            valuePropName="checked"
-            rules={[
-              {
-                validator: (_, value) =>
-                  value
-                    ? Promise.resolve()
-                    : Promise.reject(new Error("Should accept agreement")),
-              },
-            ]}
+        <>
+          <Form
+            labelCol={{ span: 4 }}
+            wrapperCol={{ span: 14 }}
+            layout="horizontal"
+            // onValuesChange={null}
+            // disabled={false}
+            onFinish={onSubmitHandeler}
           >
-            <Checkbox>
-              I have read the <a href="">agreement</a>
-            </Checkbox>
-          </Form.Item>
-          <Form.Item>
-            <Button type="primary" htmlType="submit">
-              Register
-            </Button>
-          </Form.Item>
-        </Form>
+            {/* Checking Admin Status To condition Render Activation */}
+            {true ? (
+              <Form.Item
+                name={"profileActivate"}
+                label="Switch"
+                valuePropName="checked"
+              >
+                <Switch />
+              </Form.Item>
+            ) : null}
+            {/* ----------------------------------------------------------------------------------------------------- */}
+            <Form.Item name={"userName"} label="Name">
+              <Input />
+            </Form.Item>
+            <Form.Item name={"email"} label="Email">
+              <Input placeholder={auth.currentUser?.email} disabled={true} />
+            </Form.Item>
+            <Form.Item label="Mobile" name={"mobileNumber"}>
+              <Input type="number" />
+            </Form.Item>
+            <Form.Item label="Date Of Birth" name={"DOB"}>
+              <DatePicker />
+            </Form.Item>
+            <Form.Item label="CNIC" name={"CNIC"}>
+              <InputNumber
+                max={9999999999999}
+                min={1111111111111}
+                maxLength={13}
+                // type={"number"}
+                style={{ width: "100%" }}
+                // className="w-5/6"
+              />
+            </Form.Item>
+            <Form.Item label="City" name={"city"}>
+              <Select>
+                <Select.Option value="Karachi">Karachi</Select.Option>
+                <Select.Option value="Lahore">Lahore</Select.Option>
+                <Select.Option value="Hyderabad">Hyderabad</Select.Option>
+                <Select.Option value="Islamabad">Islamabad</Select.Option>
+                <Select.Option value="Quetta">Quetta</Select.Option>
+                <Select.Option value="Peshawar">Peshawar</Select.Option>
+              </Select>
+            </Form.Item>
+            <Form.Item label="Address" name={"address"}>
+              <Input type="text" />
+            </Form.Item>
+            <Form.Item label="About" name={"Bio"}>
+              <TextArea rows={4} />
+            </Form.Item>
+            <Form.Item label="University" name={"university"}>
+              <Select>
+                <Select.Option value="Karachi University">
+                  Karachi University
+                </Select.Option>
+                <Select.Option value="Iqra University">
+                  Iqra University
+                </Select.Option>
+                <Select.Option value="IBA">IBA</Select.Option>
+                <Select.Option value="LUMS">LUMS</Select.Option>
+                <Select.Option value="Fast">Fast</Select.Option>
+                <Select.Option value="Fuuast">Fuuast</Select.Option>
+              </Select>
+            </Form.Item>
+            <Form.Item label="Degree" name={"degree"}>
+              <Select>
+                <Select.Option value="BSSE">BSSE</Select.Option>
+                <Select.Option value="BSCS">BSCS</Select.Option>
+                <Select.Option value="BBA">BBA</Select.Option>
+                <Select.Option value="B.Com">B.Com</Select.Option>
+                <Select.Option value="BA">BA</Select.Option>
+                <Select.Option value="Engineering">Engineering</Select.Option>
+              </Select>
+            </Form.Item>
+            <Form.Item label="CGPA" name={"CGPA"}>
+              <InputNumber max={4.0} min={0} />
+            </Form.Item>
+
+            <div className="flex justify-center align-middle">
+              <Form.Item
+                name="agreement"
+                valuePropName="checked"
+                rules={[
+                  {
+                    validator: (_, value) =>
+                      value
+                        ? Promise.resolve()
+                        : Promise.reject(new Error("Should accept agreement")),
+                  },
+                ]}
+              >
+                <Checkbox>
+                  I have read the <a href="">agreement</a>
+                </Checkbox>
+              </Form.Item>
+              <Form.Item>
+                <Button type="primary" htmlType="submit">
+                  Register
+                </Button>
+              </Form.Item>{" "}
+            </div>
+            {/* ----------------------------------------------------------------------------------------------------- */}
+          </Form>
+        </>
       </div>
     </>
   );
