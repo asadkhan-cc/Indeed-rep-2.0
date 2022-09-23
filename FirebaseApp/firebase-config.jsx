@@ -8,6 +8,8 @@ import {
   createUserWithEmailAndPassword,
   sendPasswordResetEmail,
   signOut,
+  sendEmailVerification,
+  onAuthStateChanged,
 } from "firebase/auth";
 import {
   getFirestore,
@@ -44,6 +46,13 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
 const googleProvider = new GoogleAuthProvider();
+// const actionCodeSettings = {
+//   url: "https://indeed-replica.vercel.app/" + auth(),
+//   handleCodeInApp: true,
+//   // When multiple custom dynamic link domains are defined, specify which
+//   // one to use.
+//   dynamicLinkDomain: "indeed-replica.vercel.app",
+// };
 const signInWithGoogle = async () => {
   try {
     const res = await signInWithPopup(auth, googleProvider);
@@ -71,19 +80,24 @@ const logInWithEmailAndPassword = async (email, password) => {
     alert(err.message);
   }
 };
-const registerWithEmailAndPassword = async (name, email, password) => {
+const registerWithEmailAndPassword = async (name = auth, email, password) => {
   try {
-    const res = await createUserWithEmailAndPassword(auth, email, password);
+    const res = await createUserWithEmailAndPassword(name, email, password);
     const user = res.user;
-    await addDoc(collection(db, "users"), {
-      uid: user.uid,
-      name,
-      authProvider: "local",
-      email,
-    });
+    // const setUser = await addDoc(collection(db, "users"), {
+    //   uid: user.uid,
+    //   name,
+    //   authProvider: "local",
+    //   email,
+    // });
+
+    // const verified = sendEmailVerification(user.email);
+    return user;
   } catch (err) {
     console.error(err);
     alert(err.message);
+    const message = "Some Error occured";
+    return { message, err };
   }
 };
 const sendPasswordReset = async (email) => {
@@ -107,3 +121,4 @@ export {
   sendPasswordReset,
   logout,
 };
+// ---------------------------------------------------------------------------------
