@@ -3,30 +3,32 @@ import { Button, Checkbox, Form, Input, notification, Space } from "antd";
 import React, { useState } from "react";
 import { logInWithEmailAndPassword } from "../../FirebaseApp/firebase-config.jsx";
 const Login = () => {
-  logInWithEmailAndPassword;
-  const [formData, setFormData] = useState(null);
-  const register = async () => {
+  // logInWithEmailAndPassword;
+  const [formData, setFormData] = useState({});
+  const [flag, setFlag] = useState(false);
+  const register = async (param) => {
     try {
-      const user = await logInWithEmailAndPassword(
-        formData.Email,
-        formData.Password
-      );
+      // setFlag((prev) => !prev);
+      console.log(param.email, param.password, "param.email & param.password");
+      const user = await logInWithEmailAndPassword(param.email, param.password);
       user.then((eve) => {
         console.log(eve);
       });
       console.log("user from login page", user);
       openNotificationWithIcon("sucess");
-      navigate("Home");
     } catch (error) {
       openNotificationWithIcon("error", error.message);
+      // setFlag((prev) => !prev);
       console.log(error);
     }
   };
   const onFinish = (values) => {
-    setFormData(values);
+    // setFormData(values);
     console.log("Received values of form: ", values);
+    register(values);
+    console.log(formData, "formdata updated with ");
   };
-  const openNotificationWithIcon = (type, message = "SignUp Sucessfull") => {
+  const openNotificationWithIcon = (type, message = "Login Sucessfull") => {
     notification[type]({
       message: message,
       description:
@@ -45,7 +47,7 @@ const Login = () => {
         onFinish={onFinish}
       >
         <Form.Item
-          name="username"
+          name="email"
           rules={[
             {
               required: true,
@@ -90,7 +92,8 @@ const Login = () => {
           <Button
             type="primary"
             htmlType="submit"
-            className="login-form-button w-[100%]"
+            className="login-form-button w-[100%] visited:cursor-progress"
+            loading={flag}
           >
             Log in
           </Button>

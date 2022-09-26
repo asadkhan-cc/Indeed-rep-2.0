@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { PlusOutlined } from "@ant-design/icons";
 import {
   Form,
   Input,
@@ -16,13 +15,12 @@ import {
   Upload,
 } from "antd";
 import { auth, db } from "../../FirebaseApp/firebase-config";
-import { addDoc, collection, doc, setDoc } from "firebase/firestore";
-import { async } from "@firebase/util";
+import { doc, setDoc } from "firebase/firestore";
 
 const { TextArea } = Input;
 
 export const CreateUserProfile = () => {
-  const Role = "User";
+  const Role = "Admin";
   // console.log(auth, "Real Auth");
   // console.log(auth.currentUser?.email);
   function valueChecker(param) {
@@ -168,11 +166,12 @@ export const CreateUserProfile = () => {
                   I have read the <a href="">agreement</a>
                 </Checkbox>
               </Form.Item>
+              <br />
               <Form.Item>
                 <Button type="primary" htmlType="submit">
                   Register
                 </Button>
-              </Form.Item>{" "}
+              </Form.Item>
             </div>
             {/* ----------------------------------------------------------------------------------------------------- */}
           </Form>
