@@ -18,9 +18,9 @@ import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "../../FirebaseApp/firebase-config";
 
 function SiteLayout({ children }) {
-  const [user, setUser] = useState({});
+  const [user, setUser] = useState(null);
   onAuthStateChanged(auth, (user) => setUser(user));
-  console.log(user, "loging Users");
+  // console.log(user, "loging Users");
 
   const [collapsed, setCollapsed] = useState(false);
   const { Header, Content, Footer, Sider } = Layout;
@@ -152,7 +152,7 @@ function SiteLayout({ children }) {
     getItem(
       "Login",
       "4",
-      <Link href={"/Login"}>
+      <Link href={"/LogOut"}>
         <div className="w-[200px] mx-auto h-auto">
           <LogoutOutlined />
           <span> Logout</span>
@@ -164,7 +164,7 @@ function SiteLayout({ children }) {
     getItem(
       "",
       "5",
-      <Link href={"/profile"}>
+      <Link href={"/Profile"}>
         <div className="w-[200px] mx-auto h-auto">
           <UserOutlined />
           <span> profile</span>
@@ -204,7 +204,7 @@ function SiteLayout({ children }) {
           <div className=" mt-2 mx-auto w-36">
             <Image src={Logo} alt="logo-Image" width={70} height={70} />
           </div>
-          {true ? (
+          {user ? (
             <Menu
               theme="dark"
               defaultSelectedKeys={["2"]}
