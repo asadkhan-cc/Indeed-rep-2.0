@@ -39,7 +39,6 @@ const UpdateCompanyProfile = (props) => {
     setToggleEdit(!toggleEdit);
     // console.log(toggleEdit);
   };
-  const Role = "Admin";
   function valueChecker(param) {
     Object.keys(param).forEach((key) => {
       if (param[key] === undefined) {
@@ -57,8 +56,6 @@ const UpdateCompanyProfile = (props) => {
       ...profileData,
       ...values,
     };
-    console.log(values.DOB);
-    values.DOB = values.DOB._d.toLocaleDateString();
 
     try {
       const docRef = await setDoc(doc(db, "users", values.email), values);
@@ -75,7 +72,8 @@ const UpdateCompanyProfile = (props) => {
   };
   return (
     <div>
-      UPDAte CompAny ProfILe
+      <p className="text-center">UPDAte CompAny ProfILe</p>
+
       <div className="text-right">
         Edit Profile :{" "}
         <Switch unchecked={toggleEdit.toString()} onClick={toggle} />
@@ -91,14 +89,12 @@ const UpdateCompanyProfile = (props) => {
           userName: props.data.userName,
           email: props.data.email,
           mobileNumber: props.data.mobileNumber,
-          CNIC: props.data.CNIC,
           city: props.data.city,
           address: props.data.address,
           Bio: props.data.Bio,
-          university: props.data.university,
-          degree: props.data.degree,
-          CGPA: props.data.CGPA,
-          DOB: profileData.DOB,
+          city: props.data.city,
+          size: props.data.size,
+          Type: props.data.Type,
         }}
         disabled={toggleEdit}
       >
@@ -118,20 +114,12 @@ const UpdateCompanyProfile = (props) => {
         <Form.Item label="Mobile" name={"mobileNumber"}>
           <Input type="number" />
         </Form.Item>
-        <Form.Item label="Date Of Birth" name={"DOB"}>
-          <DatePicker
-          // defaultValue={}
-          />
+        <Form.Item label="About" name={"Bio"}>
+          <TextArea rows={4} />
         </Form.Item>
-        <Form.Item label="CNIC" name={"CNIC"}>
-          <InputNumber
-            max={9999999999999}
-            min={1111111111111}
-            maxLength={13}
-            // type={"number"}
-            style={{ width: "100%" }}
-            // className="w-5/6"
-          />
+
+        <Form.Item label="Address" name={"address"}>
+          <Input type="text" />
         </Form.Item>
         <Form.Item label="City" name={"city"}>
           <Select>
@@ -143,38 +131,26 @@ const UpdateCompanyProfile = (props) => {
             <Select.Option value="Peshawar">Peshawar</Select.Option>
           </Select>
         </Form.Item>
-        <Form.Item label="Address" name={"address"}>
-          <Input type="text" />
-        </Form.Item>
-        <Form.Item label="About" name={"Bio"}>
-          <TextArea rows={4} />
-        </Form.Item>
-        <Form.Item label="University" name={"university"}>
+
+        <Form.Item label="Companey Size" name={"size"}>
           <Select>
-            <Select.Option value="Karachi University">
-              Karachi University
-            </Select.Option>
-            <Select.Option value="Iqra University">
-              Iqra University
-            </Select.Option>
-            <Select.Option value="IBA">IBA</Select.Option>
-            <Select.Option value="LUMS">LUMS</Select.Option>
-            <Select.Option value="Fast">Fast</Select.Option>
-            <Select.Option value="Fuuast">Fuuast</Select.Option>
+            <Select.Option value="10-20">10-20</Select.Option>
+            <Select.Option value="20-50">20-50</Select.Option>
+            <Select.Option value="50-100">50-100</Select.Option>
+            <Select.Option value="100-200">100-200</Select.Option>
+            <Select.Option value="B.200-400">200-400</Select.Option>
+            <Select.Option value="500+">500+</Select.Option>
           </Select>
         </Form.Item>
-        <Form.Item label="Degree" name={"degree"}>
+        <Form.Item label="Companey Type" name={"Type"}>
           <Select>
-            <Select.Option value="BSSE">BSSE</Select.Option>
-            <Select.Option value="BSCS">BSCS</Select.Option>
-            <Select.Option value="BBA">BBA</Select.Option>
-            <Select.Option value="B.Com">B.Com</Select.Option>
-            <Select.Option value="BA">BA</Select.Option>
-            <Select.Option value="Engineering">Engineering</Select.Option>
+            <Select.Option value="Startup">Startup</Select.Option>
+            <Select.Option value="Consultation">Consultation</Select.Option>
+            <Select.Option value="Agency">Agency</Select.Option>
+            <Select.Option value="SystemServices">
+              System Services
+            </Select.Option>
           </Select>
-        </Form.Item>
-        <Form.Item label="CGPA" name={"CGPA"}>
-          <InputNumber max={4.0} min={0} />
         </Form.Item>
 
         <div className="flex justify-center align-middle">

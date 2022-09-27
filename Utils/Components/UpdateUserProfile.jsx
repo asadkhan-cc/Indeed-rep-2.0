@@ -40,7 +40,6 @@ const UpdateUserProfile = (props) => {
     setToggleEdit(!toggleEdit);
     // console.log(toggleEdit);
   };
-  const Role = "Admin";
   function valueChecker(param) {
     Object.keys(param).forEach((key) => {
       if (param[key] === undefined) {
