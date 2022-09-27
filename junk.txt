@@ -1,0 +1,22 @@
+History Push 
+Timer
+sub folder for modules
+Thu Sep 15 2022 11:19:44 GMT+0500 
+E MMM DD YYYY hh:mm:ss 
+    values.DOB = moment(values.DOB, "E MMM DD YYYY hh:mm:ss ", false);
+Wed Sep 07 2022
+e MMM DD YYYY
+
+
+ console.log(values.DOB);
+    const dateString = values.DOB._d.toLocaleDateString();
+    console.log(dateString, "converting moment to strubg");
+    const dateStringToMomentValid = moment(dateString, "MM/DD/YYYY").isValid();
+    console.log(dateStringToMomentValid);
+    const dateStringToMoment = moment(dateString, "MM/DD/YYYY");
+    console.log(dateStringToMoment);
+
+need to take care of the following today!
+Warning: Can't perform a React state update on a component that hasn't mounted yet. This indicates that you have a side-effect in your render function that asynchronously later calls tries to update the component. Move this work to useEffect instead.
+LogOut@webpack-internal:///./pages/LogOut.jsx:21:72
+main

@@ -1,38 +1,35 @@
+import { useRouter } from "next/router";
 import { LockOutlined, UserOutlined } from "@ant-design/icons";
 import { Button, Checkbox, Form, Input, notification, Space } from "antd";
 import React, { useState } from "react";
-import { logInWithEmailAndPassword } from "../../FirebaseApp/firebase-config.jsx";
+import { logInWithEmailAndPassword } from "../../FirebaseApp/firebase-config.js";
 const Login = () => {
-  // logInWithEmailAndPassword;
-  const [formData, setFormData] = useState({});
   const [flag, setFlag] = useState(false);
+  const router = useRouter();
   const register = async (param) => {
+    setFlag((prev) => !prev);
+
     try {
-      // setFlag((prev) => !prev);
       console.log(param.email, param.password, "param.email & param.password");
       const user = await logInWithEmailAndPassword(param.email, param.password);
-      user.then((eve) => {
-        console.log(eve);
-      });
+
       console.log("user from login page", user);
-      openNotificationWithIcon("sucess");
+      router.push("/Dashboard");
+      // openNotificationWithIcon("sucess", "Sucessful");
+      setFlag((prev) => !prev);
     } catch (error) {
-      openNotificationWithIcon("error", error.message);
-      // setFlag((prev) => !prev);
+      openNotificationWithIcon("error", "Some Error Occured" + error.message);
+      setFlag((prev) => !prev);
       console.log(error);
     }
   };
   const onFinish = (values) => {
-    // setFormData(values);
     console.log("Received values of form: ", values);
     register(values);
-    console.log(formData, "formdata updated with ");
   };
-  const openNotificationWithIcon = (type, message = "Login Sucessfull") => {
+  const openNotificationWithIcon = (type, message) => {
     notification[type]({
       message: message,
-      description:
-        "This is the content of the notification. This is the content of the notification. This is the content of the notification.",
     });
   };
   return (

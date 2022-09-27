@@ -1,29 +1,29 @@
 import { Button, message, Steps } from "antd";
 import React, { useState } from "react";
-import CreateCompaneyProfile from "../Components/CreateCompaneyProfile";
+import { auth } from "../../FirebaseApp/firebase-config";
+import CreateCompaneyProfile from "../Components/CreateCompanyProfile";
 import SignIn from "../Components/SignIn";
 
 const SignUpEmployerPage = () => {
   const [current, setCurrent] = useState(0);
   const { Step } = Steps;
+  const next = (e) => {
+    setCurrent(current + 1);
+  };
   const steps = [
     {
       title: "First",
-      content: <SignIn></SignIn>,
+      content: <SignIn current={current} change_Next={next}></SignIn>,
     },
     {
       title: "Second",
       content: <CreateCompaneyProfile />,
     },
   ];
-  const next = () => {
-    setCurrent(current + 1);
-  };
 
   const prev = () => {
     setCurrent(current - 1);
   };
-
   return (
     <>
       <div className="flex flex-col">

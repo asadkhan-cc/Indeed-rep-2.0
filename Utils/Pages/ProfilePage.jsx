@@ -5,10 +5,14 @@ import { auth, db } from "../../FirebaseApp/firebase-config";
 import { onAuthStateChanged } from "firebase/auth";
 import UpdateUserProfile from "../Components/UpdateUserProfile";
 import { Button } from "antd";
+import UpdateCompanyProfile from "../Components/UpdateCompanyProfile copy";
 
 const ProfilePage = () => {
   const [profileData, setProfileData] = useState(null);
   const [user, setUser] = useState(null);
+  if (null) {
+    alert("hello Alert from null");
+  }
   const gettingDocumentFromFirestore = async () => {
     if (user) {
       try {
@@ -43,23 +47,29 @@ const ProfilePage = () => {
   );
   return (
     <div>
+      <h1>role : {profileData?.role}</h1>
+
       {user && profileData && true ? (
-        <div>
-          <h1>userName : {profileData.userName}</h1>
-          <h1>email : {profileData.email}</h1>
-          <h1>mobileNumber : {profileData.mobileNumber}</h1>
-          <h1>university : {profileData.university}</h1>
-          <h1>degree : {profileData.degree}</h1>
-          <h1>CGPA : {profileData.CGPA}</h1>
-          <h1>Bio : {profileData.Bio}</h1>
-          <h1>CNIC : {profileData.CNIC}</h1>
-          <h1>address : {profileData.address}</h1>
-          <h1>role : {profileData.role}</h1>
-          <h1>
-            profileActivate : {profileData.profileActivate ? "Yes" : "NO"}
-          </h1>
+        // <div>
+        //   <h1>userName : {profileData.userName}</h1>
+        //   <h1>email : {profileData.email}</h1>
+        //   <h1>mobileNumber : {profileData.mobileNumber}</h1>
+        //   <h1>university : {profileData.university}</h1>
+        //   <h1>degree : {profileData.degree}</h1>
+        //   <h1>CGPA : {profileData.CGPA}</h1>
+        //   <h1>Bio : {profileData.Bio}</h1>
+        //   <h1>CNIC : {profileData.CNIC}</h1>
+        //   <h1>address : {profileData.address}</h1>
+        // <h1>role : {profileData.role}</h1>
+        //   <h1>
+        //     profileActivate : {profileData.profileActivate ? "Yes" : "NO"}
+        //   </h1>
+
+        profileData.role === "User" ? (
           <UpdateUserProfile data={profileData} />
-        </div>
+        ) : (
+          <UpdateCompanyProfile data={profileData} />
+        )
       ) : (
         <div className=" my-5">
           <div className="flex flex-row items-center justify-center ">
