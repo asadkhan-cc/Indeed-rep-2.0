@@ -19,7 +19,7 @@ import { doc, setDoc } from "firebase/firestore";
 import moment from "moment";
 
 const { TextArea } = Input;
-const UpdateUserProfile = (props) => {
+const UpdateCompanyProfile = (props) => {
   const profileData = props.data;
   try {
     if (moment(profileData.DOB, "MM/DD/YYYY").isValid()) {
@@ -31,8 +31,7 @@ const UpdateUserProfile = (props) => {
     // console.log(dateStringToMoment);
   } catch (err) {
     console.log(err);
-    const newDatefromMoment = moment();
-    profileData.DOB = newDatefromMoment;
+    profileData.DOB = moment();
   }
   const [toggleEdit, setToggleEdit] = useState(true);
   const [btnLoading, setBtnLoading] = useState(false);
@@ -76,6 +75,7 @@ const UpdateUserProfile = (props) => {
   };
   return (
     <div>
+      UPDAte CompAny ProfILe
       <div className="text-right">
         Edit Profile :{" "}
         <Switch unchecked={toggleEdit.toString()} onClick={toggle} />
@@ -191,4 +191,4 @@ const UpdateUserProfile = (props) => {
   );
 };
 
-export default UpdateUserProfile;
+export default UpdateCompanyProfile;

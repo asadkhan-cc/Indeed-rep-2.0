@@ -21,7 +21,7 @@ const SignIn = (props) => {
     });
   };
   return (
-    <div className="h-1/2 w-1/3 mx-auto shadow border p-4">
+    <div className="h-1/2 w-auto lg:w-1/2 mx-auto shadow border p-4">
       <h1 className="w-1/2 mx-auto text-center">SignIn form</h1>
       <Form name="normal_login" className="login-form" onFinish={onFinish}>
         <Form.Item

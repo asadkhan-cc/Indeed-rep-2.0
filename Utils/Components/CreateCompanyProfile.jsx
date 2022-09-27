@@ -14,6 +14,7 @@ import {
   Switch,
   Checkbox,
   Upload,
+  message,
 } from "antd";
 import { auth, db } from "../../FirebaseApp/firebase-config";
 import { addDoc, collection, doc, setDoc } from "firebase/firestore";
@@ -28,22 +29,10 @@ import {
 import { useRouter } from "next/router";
 const { TextArea } = Input;
 
-export const CreateUserProfile = () => {
-  const Role = "User";
-  const [btnLoader, setBtnLoader] = useState(false);
-  const [imageUpload, setImageUpload] = useState(null);
-  const [imageUrls, setImageUrls] = useState([]);
+const CreateCompaneyProfile = () => {
+  const Role = "Company";
   const router = useRouter();
-  // const imagesListRef = ref(db, "images/");
-  // const uploadFile = () => {
-  //   if (imageUpload == null) return;
-  //   const imageRef = ref(storage, `images/${imageUpload.name + v4()}`);
-  //   uploadBytes(imageRef, imageUpload).then((snapshot) => {
-  //     getDownloadURL(snapshot.ref).then((url) => {
-  //       setImageUrls((prev) => [...prev, url]);
-  //     });
-  //   });
-  // };
+  const [loading, setLoading] = useState(false);
   // console.log(auth, "Real Auth");
   // console.log(auth.currentUser?.email);
   function valueChecker(param) {
@@ -55,24 +44,18 @@ export const CreateUserProfile = () => {
   }
 
   const onSubmitHandeler = async (values) => {
-    setBtnLoader((prev) => !prev);
+    setLoading((prev) => !prev);
     console.log(values, "Finish Button Pressed");
     valueChecker(values);
-    try {
-      values.DOB = values.DOB._d.toLocaleDateString();
 
-      values = {
-        ...values,
+    values = {
+      ...values,
 
-        role: Role,
-        email: auth.currentUser?.email,
-        isadmin: false,
-      };
-      console.log("after change", values);
-    } catch (err) {
-      console.error(err);
-      return;
-    }
+      role: Role,
+      email: auth.currentUser?.email,
+      isadmin: false,
+    };
+    console.log("after change", values);
 
     try {
       const docRef = await setDoc(
@@ -80,17 +63,18 @@ export const CreateUserProfile = () => {
         values
       );
       console.log("Document written with ID: ", auth.currentUser?.email);
+      message.success("Processing complete!");
+      router.push("/Dashboard");
     } catch (e) {
       console.error("Error adding document: ", e);
     }
-    setBtnLoader((prev) => !prev);
-    router.push("/Dashboard");
+    setLoading((prev) => !prev);
   };
 
   return (
     <>
       <div>
-        <p className="text-center">CreateUserProfile</p>
+        <p className="text-center">Create Company Profile</p>
         <>
           <Form
             labelCol={{ span: 4 }}
@@ -100,6 +84,7 @@ export const CreateUserProfile = () => {
             // disabled={false}
             onFinish={onSubmitHandeler}
             initialValues={null}
+            requiredMark={true}
           >
             {/* Checking Admin Status To condition Render Activation */}
 
@@ -123,18 +108,12 @@ export const CreateUserProfile = () => {
             <Form.Item label="Mobile" name={"mobileNumber"}>
               <Input type="number" />
             </Form.Item>
-            <Form.Item label="Date Of Birth" name={"DOB"}>
-              <DatePicker />
+            <Form.Item label="About" name={"Bio"}>
+              <TextArea rows={4} />
             </Form.Item>
-            <Form.Item label="CNIC" name={"CNIC"}>
-              <InputNumber
-                max={9999999999999}
-                min={1111111111111}
-                maxLength={13}
-                // type={"number"}
-                style={{ width: "100%" }}
-                // className="w-5/6"
-              />
+
+            <Form.Item label="Address" name={"address"}>
+              <Input type="text" />
             </Form.Item>
             <Form.Item label="City" name={"city"}>
               <Select>
@@ -146,39 +125,28 @@ export const CreateUserProfile = () => {
                 <Select.Option value="Peshawar">Peshawar</Select.Option>
               </Select>
             </Form.Item>
-            <Form.Item label="Address" name={"address"}>
-              <Input type="text" />
-            </Form.Item>
-            <Form.Item label="About" name={"Bio"}>
-              <TextArea rows={4} />
-            </Form.Item>
-            <Form.Item label="University" name={"university"}>
+
+            <Form.Item label="Companey Size" name={"size"}>
               <Select>
-                <Select.Option value="Karachi University">
-                  Karachi University
-                </Select.Option>
-                <Select.Option value="Iqra University">
-                  Iqra University
-                </Select.Option>
-                <Select.Option value="IBA">IBA</Select.Option>
-                <Select.Option value="LUMS">LUMS</Select.Option>
-                <Select.Option value="Fast">Fast</Select.Option>
-                <Select.Option value="Fuuast">Fuuast</Select.Option>
+                <Select.Option value="10-20">10-20</Select.Option>
+                <Select.Option value="20-50">20-50</Select.Option>
+                <Select.Option value="50-100">50-100</Select.Option>
+                <Select.Option value="100-200">100-200</Select.Option>
+                <Select.Option value="B.200-400">200-400</Select.Option>
+                <Select.Option value="500+">500+</Select.Option>
               </Select>
             </Form.Item>
-            <Form.Item label="Degree" name={"degree"}>
+            <Form.Item label="Companey Type" name={"Type"}>
               <Select>
-                <Select.Option value="BSSE">BSSE</Select.Option>
-                <Select.Option value="BSCS">BSCS</Select.Option>
-                <Select.Option value="BBA">BBA</Select.Option>
-                <Select.Option value="B.Com">B.Com</Select.Option>
-                <Select.Option value="BA">BA</Select.Option>
-                <Select.Option value="Engineering">Engineering</Select.Option>
+                <Select.Option value="Startup">Startup</Select.Option>
+                <Select.Option value="Consultation">Consultation</Select.Option>
+                <Select.Option value="Agency">Agency</Select.Option>
+                <Select.Option value="SystemServices">
+                  System Services
+                </Select.Option>
               </Select>
             </Form.Item>
-            <Form.Item label="CGPA" name={"CGPA"}>
-              <InputNumber max={4.0} min={0} />
-            </Form.Item>
+            {/* ----------------------------------------------------------------------------------------------------- */}
 
             <div className="flex justify-center align-middle">
               <Form.Item
@@ -200,7 +168,7 @@ export const CreateUserProfile = () => {
               </Form.Item>
               <br />
               <Form.Item>
-                <Button type="primary" htmlType="submit">
+                <Button type="primary" htmlType="submit" loading={loading}>
                   Register
                 </Button>
               </Form.Item>
@@ -212,3 +180,5 @@ export const CreateUserProfile = () => {
     </>
   );
 };
+
+export default CreateCompaneyProfile;

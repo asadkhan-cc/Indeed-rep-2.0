@@ -7,7 +7,7 @@ import DashBoardPageStudent from "../Utils/Pages/DashBoardPageStudent";
 const Dashboard = () => {
   const [user, setUser] = useState(null);
   onAuthStateChanged(auth, (user) => setUser(user));
-  console.log(user);
+  // console.log(user);
   return <div>{user ? <DashBoardPageStudent /> : <LoginErr />}</div>;
 };
 
