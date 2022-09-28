@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { UploadOutlined } from "@ant-design/icons";
 import {
   Form,
   Input,
@@ -14,13 +15,52 @@ import {
   Checkbox,
   Upload,
 } from "antd";
-import { auth, db } from "../../FirebaseApp/firebase-config";
+import { auth, db, storage } from "../../FirebaseApp/firebase-config";
 import { doc, setDoc } from "firebase/firestore";
 import moment from "moment";
+import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 
 const { TextArea } = Input;
 const UpdateUserProfile = (props) => {
   const profileData = props.data;
+
+  // uploading Image And geting Download Url
+  // {{(*Start*)}}
+  const [imageUpload, setImageUpload] = useState(null);
+  const [imageUrl, setImageUrl] = useState(null); //
+  const [imageSnapShot, setImageSnapShot] = useState(null);
+  var currentDate = new Date();
+  var datetime = `${currentDate.getDate()}-${
+    currentDate.getMonth() + 1
+  }-${currentDate.getFullYear()}on${currentDate.getHours()}:${currentDate.getMinutes()}:${currentDate.getSeconds()}`;
+  const imagesListRef = ref(storage, "Resume/");
+
+  const uploadFile = async () => {
+    if (imageUpload == null) return { snapshot: null, url: null };
+    const imageRef = ref(
+      storage,
+      `Resume/${props?.data?.email}/${datetime + imageUpload?.file.name}`
+    );
+    const snapshot = await uploadBytes(
+      imageRef,
+      imageUpload.file.originFileObj
+    );
+    setImageSnapShot(snapshot.ref);
+    const urlFromStorage = await getDownloadURL(snapshot.ref);
+    setImageUrl(urlFromStorage);
+    console.log("img URL received");
+    return { snapshot: snapshot, url: urlFromStorage };
+    // uploadBytes(imageRef, imageUpload.file.originFileObj).then((snapshot) => {
+    //   setImageSnapShot(snapshot.ref);
+    //   console.log("img snapshot received");
+    //   getDownloadURL(snapshot.ref).then((url) => {
+    //     setImageUrl(url);
+    //     console.log("img URL received");
+    //   });
+    // });
+  };
+  // {{(*End*)}}
+
   try {
     if (moment(profileData.DOB, "MM/DD/YYYY").isValid()) {
       profileData.DOB = moment(profileData.DOB, "MM/DD/YYYY");
@@ -31,8 +71,8 @@ const UpdateUserProfile = (props) => {
     // console.log(dateStringToMoment);
   } catch (err) {
     console.log(err);
-    const newDatefromMoment = moment();
-    profileData.DOB = newDatefromMoment;
+    const newDateFromMoment = moment();
+    profileData.DOB = newDateFromMoment;
   }
   const [toggleEdit, setToggleEdit] = useState(true);
   const [btnLoading, setBtnLoading] = useState(false);
@@ -50,34 +90,56 @@ const UpdateUserProfile = (props) => {
 
   const onSubmitHandeler = async (values) => {
     setBtnLoading((prev) => !prev);
-    // console.log(values, "Before Change");
+    console.log(values, "Before Change");
     valueChecker(values);
+
+    const fileUploadData = await uploadFile();
 
     values = {
       ...profileData,
       ...values,
     };
-    console.log(values.DOB);
     values.DOB = values.DOB._d.toLocaleDateString();
+    if (fileUploadData.url !== null) {
+      values.resume = await fileUploadData.url;
+      values.snap = await JSON.stringify(fileUploadData.snapshot);
+    } else {
+      values.resume = "default";
+      values.snap = "default";
+    }
+
+    // if (imageUpload === null) {
+    //   alert("IF IS TRUE");
+    //   values.resume = profileData.resume;
+    //   values.url = profileData.url;
+    // } else {
+    //   alert("Else IS running");
+
+    //   values.resume = imageUrl;
+    //   values.url = JSON.stringify(imageSnapShot);
+    // }
+    console.log(values, "in the end");
 
     try {
       const docRef = await setDoc(doc(db, "users", values.email), values);
       console.log("Document written with ID: ", values.email);
-      setBtnLoading((prev) => !prev);
       toggle();
       alert("Success!");
     } catch (e) {
       console.error("Error adding document: ", e);
       alert("ERROR");
-
-      setBtnLoading((prev) => !prev);
     }
+    setBtnLoading((prev) => !prev);
+    router.push("/Profile");
   };
   return (
     <div>
       <div className="text-right">
         Edit Profile :{" "}
-        <Switch unchecked={toggleEdit.toString()} onClick={toggle} />
+        {/* () => {
+            toggleEdit ? toggleEdit.toString() : !toggleEdit.toString();
+          } */}
+        <Switch unchecked={"true"} onClick={toggle} />
       </div>
       <Form
         labelCol={{ span: 4 }}
@@ -85,6 +147,7 @@ const UpdateUserProfile = (props) => {
         layout="horizontal"
         // onValuesChange={null}
         // disabled={false}
+
         onFinish={onSubmitHandeler}
         initialValues={{
           userName: props.data.userName,
@@ -108,21 +171,37 @@ const UpdateUserProfile = (props) => {
             {profileData.profileActivate ? "Yes" : "NO"}
           </h1>
         </div>
-        <Form.Item name={"userName"} label="Name">
+        <Form.Item
+          rules={[{ required: true, message: "Please input your Name!" }]}
+          label="Name"
+          name="userName"
+        >
           <Input />
         </Form.Item>
-        <Form.Item name={"email"} label="Email">
+        <Form.Item label="Email" name="email">
           <Input placeholder={auth.currentUser?.email} disabled={true} />
         </Form.Item>
-        <Form.Item label="Mobile" name={"mobileNumber"}>
+        <Form.Item
+          rules={[{ required: true, message: "Please input your Mobile!" }]}
+          label="Mobile"
+          name="mobileNumber"
+        >
           <Input type="number" />
         </Form.Item>
-        <Form.Item label="Date Of Birth" name={"DOB"}>
+        <Form.Item
+          rules={[{ required: true, message: "Please input your Date!" }]}
+          label="Date Of Birth"
+          name="DOB"
+        >
           <DatePicker
           // defaultValue={}
           />
         </Form.Item>
-        <Form.Item label="CNIC" name={"CNIC"}>
+        <Form.Item
+          rules={[{ required: true, message: "Please input your CNIC!" }]}
+          label="CNIC"
+          name="CNIC"
+        >
           <InputNumber
             max={9999999999999}
             min={1111111111111}
@@ -132,7 +211,11 @@ const UpdateUserProfile = (props) => {
             // className="w-5/6"
           />
         </Form.Item>
-        <Form.Item label="City" name={"city"}>
+        <Form.Item
+          rules={[{ required: true, message: "Please input your City!" }]}
+          label="City"
+          name="city"
+        >
           <Select>
             <Select.Option value="Karachi">Karachi</Select.Option>
             <Select.Option value="Lahore">Lahore</Select.Option>
@@ -142,13 +225,25 @@ const UpdateUserProfile = (props) => {
             <Select.Option value="Peshawar">Peshawar</Select.Option>
           </Select>
         </Form.Item>
-        <Form.Item label="Address" name={"address"}>
+        <Form.Item
+          rules={[{ required: true, message: "Please input your Address!" }]}
+          label="Address"
+          name="address"
+        >
           <Input type="text" />
         </Form.Item>
-        <Form.Item label="About" name={"Bio"}>
+        <Form.Item
+          rules={[{ required: true, message: "Please input your About!" }]}
+          label="About"
+          name="Bio"
+        >
           <TextArea rows={4} />
         </Form.Item>
-        <Form.Item label="University" name={"university"}>
+        <Form.Item
+          rules={[{ required: true, message: "Please input your University!" }]}
+          label="University"
+          name="university"
+        >
           <Select>
             <Select.Option value="Karachi University">
               Karachi University
@@ -162,7 +257,11 @@ const UpdateUserProfile = (props) => {
             <Select.Option value="Fuuast">Fuuast</Select.Option>
           </Select>
         </Form.Item>
-        <Form.Item label="Degree" name={"degree"}>
+        <Form.Item
+          rules={[{ required: true, message: "Please input your Degree!" }]}
+          label="Degree"
+          name="degree"
+        >
           <Select>
             <Select.Option value="BSSE">BSSE</Select.Option>
             <Select.Option value="BSCS">BSCS</Select.Option>
@@ -172,7 +271,23 @@ const UpdateUserProfile = (props) => {
             <Select.Option value="Engineering">Engineering</Select.Option>
           </Select>
         </Form.Item>
-        <Form.Item label="CGPA" name={"CGPA"}>
+
+        <Form.Item label="Resume" name="resume">
+          <Upload
+            onChange={(eve) => {
+              setImageUpload(eve);
+            }}
+            listType="fileList"
+            maxCount={1}
+          >
+            <Button icon={<UploadOutlined />}>Upload Resume</Button>
+          </Upload>
+        </Form.Item>
+        <Form.Item
+          rules={[{ required: true, message: "Please input your CGPA!" }]}
+          label="CGPA"
+          name="CGPA"
+        >
           <InputNumber max={4.0} min={0} />
         </Form.Item>
 
