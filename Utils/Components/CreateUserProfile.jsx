@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { PlusOutlined } from "@ant-design/icons";
+import { UploadOutlined } from "@ant-design/icons";
 import {
   Form,
   Input,
@@ -15,7 +15,7 @@ import {
   Checkbox,
   Upload,
 } from "antd";
-import { auth, db } from "../../FirebaseApp/firebase-config";
+import { auth, db, storage } from "../../FirebaseApp/firebase-config";
 import { addDoc, collection, doc, setDoc } from "firebase/firestore";
 import { async } from "@firebase/util";
 import {
@@ -32,20 +32,41 @@ export const CreateUserProfile = () => {
   const Role = "User";
   const [btnLoader, setBtnLoader] = useState(false);
   const [imageUpload, setImageUpload] = useState(null);
-  const [imageUrls, setImageUrls] = useState([]);
+  const [imageUrl, setImageUrl] = useState(null); //
+  const [imageSnapShot, setImageSnapShot] = useState(null);
+
   const router = useRouter();
-  // const imagesListRef = ref(db, "images/");
-  // const uploadFile = () => {
-  //   if (imageUpload == null) return;
-  //   const imageRef = ref(storage, `images/${imageUpload.name + v4()}`);
-  //   uploadBytes(imageRef, imageUpload).then((snapshot) => {
-  //     getDownloadURL(snapshot.ref).then((url) => {
-  //       setImageUrls((prev) => [...prev, url]);
-  //     });
-  //   });
-  // };
-  // console.log(auth, "Real Auth");
-  // console.log(auth.currentUser?.email);
+  var currentDate = new Date();
+  var datetime = `${currentDate.getDate()}-${
+    currentDate.getMonth() + 1
+  }-${currentDate.getFullYear()}on${currentDate.getHours()}:${currentDate.getMinutes()}:${currentDate.getSeconds()}`;
+  const imagesListRef = ref(storage, "Resume/");
+
+  const uploadFile = async () => {
+    if (imageUpload == null) return { snapshot: null, url: null };
+    const imageRef = ref(
+      storage,
+      `Resume/${auth.currentUser?.email}/${datetime + imageUpload?.file.name}`
+    );
+    const snapshot = await uploadBytes(
+      imageRef,
+      imageUpload.file.originFileObj
+    );
+    setImageSnapShot(snapshot.ref);
+    const urlFromStorage = await getDownloadURL(snapshot.ref);
+    setImageUrl(urlFromStorage);
+    console.log("img URL received");
+    return { snapshot: snapshot, url: urlFromStorage };
+    // uploadBytes(imageRef, imageUpload.file.originFileObj).then((snapshot) => {
+    //   setImageSnapShot(snapshot.ref);
+    //   console.log("img snapshot received");
+    //   getDownloadURL(snapshot.ref).then((url) => {
+    //     setImageUrl(url);
+    //     console.log("img URL received");
+    //   });
+    // });
+  };
+
   function valueChecker(param) {
     Object.keys(param).forEach((key) => {
       if (param[key] === undefined) {
@@ -59,7 +80,12 @@ export const CreateUserProfile = () => {
     console.log(values, "Finish Button Pressed");
     valueChecker(values);
     try {
-      values.DOB = values.DOB._d.toLocaleDateString();
+      const fileUploadData = await uploadFile();
+      values.DOB = await values.DOB._d.toLocaleDateString();
+      if (fileUploadData.url !== null) {
+        values.resume = await fileUploadData.url;
+        values.snap = await JSON.stringify(fileUploadData.snapshot);
+      }
 
       values = {
         ...values,
@@ -114,19 +140,35 @@ export const CreateUserProfile = () => {
               </Form.Item>
             ) : null}
             {/* ----------------------------------------------------------------------------------------------------- */}
-            <Form.Item name={"userName"} label="Name">
+            <Form.Item
+              rules={[{ required: true, message: "Please input your Name!" }]}
+              label="Name"
+              name={"userName"}
+            >
               <Input />
             </Form.Item>
-            <Form.Item name={"email"} label="Email">
+            <Form.Item label="Email" name={"email"}>
               <Input placeholder={auth.currentUser?.email} disabled={true} />
             </Form.Item>
-            <Form.Item label="Mobile" name={"mobileNumber"}>
+            <Form.Item
+              rules={[{ required: true, message: "Please input your Name!" }]}
+              label="Mobile"
+              name={"mobileNumber"}
+            >
               <Input type="number" />
             </Form.Item>
-            <Form.Item label="Date Of Birth" name={"DOB"}>
+            <Form.Item
+              rules={[{ required: true, message: "Please input your Name!" }]}
+              label="Date Of Birth"
+              name={"DOB"}
+            >
               <DatePicker />
             </Form.Item>
-            <Form.Item label="CNIC" name={"CNIC"}>
+            <Form.Item
+              rules={[{ required: true, message: "Please input your Name!" }]}
+              label="CNIC"
+              name={"CNIC"}
+            >
               <InputNumber
                 max={9999999999999}
                 min={1111111111111}
@@ -136,7 +178,11 @@ export const CreateUserProfile = () => {
                 // className="w-5/6"
               />
             </Form.Item>
-            <Form.Item label="City" name={"city"}>
+            <Form.Item
+              rules={[{ required: true, message: "Please input your Name!" }]}
+              label="City"
+              name={"city"}
+            >
               <Select>
                 <Select.Option value="Karachi">Karachi</Select.Option>
                 <Select.Option value="Lahore">Lahore</Select.Option>
@@ -146,13 +192,25 @@ export const CreateUserProfile = () => {
                 <Select.Option value="Peshawar">Peshawar</Select.Option>
               </Select>
             </Form.Item>
-            <Form.Item label="Address" name={"address"}>
+            <Form.Item
+              rules={[{ required: true, message: "Please input your Name!" }]}
+              label="Address"
+              name={"address"}
+            >
               <Input type="text" />
             </Form.Item>
-            <Form.Item label="About" name={"Bio"}>
+            <Form.Item
+              rules={[{ required: true, message: "Please input your Name!" }]}
+              label="About"
+              name={"Bio"}
+            >
               <TextArea rows={4} />
             </Form.Item>
-            <Form.Item label="University" name={"university"}>
+            <Form.Item
+              rules={[{ required: true, message: "Please input your Name!" }]}
+              label="University"
+              name={"university"}
+            >
               <Select>
                 <Select.Option value="Karachi University">
                   Karachi University
@@ -166,7 +224,11 @@ export const CreateUserProfile = () => {
                 <Select.Option value="Fuuast">Fuuast</Select.Option>
               </Select>
             </Form.Item>
-            <Form.Item label="Degree" name={"degree"}>
+            <Form.Item
+              rules={[{ required: true, message: "Please input your Name!" }]}
+              label="Degree"
+              name={"degree"}
+            >
               <Select>
                 <Select.Option value="BSSE">BSSE</Select.Option>
                 <Select.Option value="BSCS">BSCS</Select.Option>
@@ -176,8 +238,27 @@ export const CreateUserProfile = () => {
                 <Select.Option value="Engineering">Engineering</Select.Option>
               </Select>
             </Form.Item>
-            <Form.Item label="CGPA" name={"CGPA"}>
+            <Form.Item
+              rules={[{ required: true, message: "Please input your Name!" }]}
+              label="CGPA"
+              name={"CGPA"}
+            >
               <InputNumber max={4.0} min={0} />
+            </Form.Item>
+            <Form.Item
+              rules={[{ required: true, message: "Please input your Name!" }]}
+              label="Resume"
+              name="resume"
+            >
+              <Upload
+                onChange={(eve) => {
+                  setImageUpload(eve);
+                }}
+                listType="fileList"
+                maxCount={1}
+              >
+                <Button icon={<UploadOutlined />}>Upload Resume</Button>
+              </Upload>
             </Form.Item>
 
             <div className="flex justify-center align-middle">
@@ -200,7 +281,7 @@ export const CreateUserProfile = () => {
               </Form.Item>
               <br />
               <Form.Item>
-                <Button type="primary" htmlType="submit">
+                <Button type="primary" htmlType="submit" loading={setBtnLoader}>
                   Register
                 </Button>
               </Form.Item>

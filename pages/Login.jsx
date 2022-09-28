@@ -12,7 +12,7 @@ const Login = () => {
   if (!user) {
     return <LoginPage />;
   } else {
-    return <div>Alredy LoggedIn</div>;
+    return { message };
   }
 };
 
