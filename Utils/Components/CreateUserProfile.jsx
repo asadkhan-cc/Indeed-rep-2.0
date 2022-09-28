@@ -25,7 +25,7 @@ import {
   listAll,
   list,
 } from "firebase/storage";
-import { useRouter } from "next/router";
+import Router, { useRouter } from "next/router";
 const { TextArea } = Input;
 
 export const CreateUserProfile = () => {
@@ -110,7 +110,7 @@ export const CreateUserProfile = () => {
       console.error("Error adding document: ", e);
     }
     setBtnLoader((prev) => !prev);
-    router.push("/Dashboard");
+    Router.push("/Dashboard");
   };
 
   return (
