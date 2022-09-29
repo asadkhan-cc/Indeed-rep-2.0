@@ -132,19 +132,15 @@ const UpdateUserProfile = (props) => {
       console.error("Error adding document: ", e);
       alert("ERROR");
     }
+
     setBtnLoading((prev) => !prev);
-    toggle();
     toggle();
     router.push("/Profile");
   };
   return (
     <div>
       <div className="text-right">
-        Edit Profile :{" "}
-        {/* () => {
-            toggleEdit ? toggleEdit.toString() : !toggleEdit.toString();
-          } */}
-        <Switch unchecked={"true"} onClick={toggle} />
+        Edit Profile : <Switch unchecked={"true"} onClick={toggle} />
       </div>
       <Form
         labelCol={{ span: 4 }}
