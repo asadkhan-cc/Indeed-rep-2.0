@@ -5,7 +5,7 @@ import React, { useState } from "react";
 const LoginErr = () => {
   const [loadingFlag, setLoadingFlag] = useState(false);
   return (
-    <div>
+    <div className="mt-28">
       <Link href={"/Login"}>
         <div className="text-center">
           <p> Kindly Login To View This Page</p>

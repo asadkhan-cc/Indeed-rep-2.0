@@ -14,7 +14,7 @@ import {
   Checkbox,
   Upload,
 } from "antd";
-import { auth, db } from "../../FirebaseApp/firebase-config";
+import { auth, db } from "../../../FirebaseApp/firebase-config";
 import { doc, setDoc } from "firebase/firestore";
 import moment from "moment";
 
@@ -132,7 +132,7 @@ const UpdateCompanyProfile = (props) => {
           </Select>
         </Form.Item>
 
-        <Form.Item label="Companey Size" name={"size"}>
+        <Form.Item label="Company Size" name={"size"}>
           <Select>
             <Select.Option value="10-20">10-20</Select.Option>
             <Select.Option value="20-50">20-50</Select.Option>
@@ -142,7 +142,7 @@ const UpdateCompanyProfile = (props) => {
             <Select.Option value="500+">500+</Select.Option>
           </Select>
         </Form.Item>
-        <Form.Item label="Companey Type" name={"Type"}>
+        <Form.Item label="Company Type" name={"Type"}>
           <Select>
             <Select.Option value="Startup">Startup</Select.Option>
             <Select.Option value="Consultation">Consultation</Select.Option>

@@ -15,10 +15,10 @@ import {
   Checkbox,
   Upload,
 } from "antd";
-import { auth, db, storage } from "../../FirebaseApp/firebase-config";
 import { doc, setDoc } from "firebase/firestore";
 import moment from "moment";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
+import { auth, db, storage } from "../../../FirebaseApp/firebase-config";
 
 const { TextArea } = Input;
 const UpdateUserProfile = (props) => {
@@ -99,6 +99,7 @@ const UpdateUserProfile = (props) => {
       ...profileData,
       ...values,
     };
+    values.role = "User";
     values.DOB = values.DOB._d.toLocaleDateString();
     if (fileUploadData.url !== null) {
       values.resume = await fileUploadData.url;

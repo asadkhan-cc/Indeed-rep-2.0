@@ -7,25 +7,31 @@ const Login = () => {
   const [flag, setFlag] = useState(false);
   const router = useRouter();
   const register = async (param) => {
-    setFlag((prev) => !prev);
-
     try {
       console.log(param.email, param.password, "param.email & param.password");
       const user = await logInWithEmailAndPassword(param.email, param.password);
 
       console.log("user from login page", user);
       router.push("/Dashboard");
+      if (user !== undefined) {
+        alert("WHAT WHAT!!!");
+      }
       // openNotificationWithIcon("sucess", "Sucessful");
-      setFlag((prev) => !prev);
     } catch (error) {
-      openNotificationWithIcon("error", "Some Error Occured" + error.message);
-      setFlag((prev) => !prev);
+      // openNotificationWithIcon("error", "Some Error Occured" + error.message);
       console.log(error);
     }
   };
   const onFinish = (values) => {
+    setFlag((prev) => !prev);
     console.log("Received values of form: ", values);
-    register(values);
+    register(values)
+      .then(() => {
+        setFlag((prev) => !prev);
+      })
+      .catch(() => {
+        setFlag((prev) => !prev);
+      });
   };
   const openNotificationWithIcon = (type, message) => {
     notification[type]({

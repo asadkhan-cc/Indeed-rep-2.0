@@ -16,7 +16,6 @@ import {
   Upload,
   message,
 } from "antd";
-import { auth, db } from "../../FirebaseApp/firebase-config";
 import { addDoc, collection, doc, setDoc } from "firebase/firestore";
 import { async } from "@firebase/util";
 import {
@@ -27,9 +26,9 @@ import {
   list,
 } from "firebase/storage";
 import { useRouter } from "next/router";
+import { auth, db } from "../../../FirebaseApp/firebase-config";
 const { TextArea } = Input;
-
-const CreateCompaneyProfile = () => {
+const CreateCompanyProfile = () => {
   const Role = "Company";
   const router = useRouter();
   const [loading, setLoading] = useState(false);
@@ -90,8 +89,8 @@ const CreateCompaneyProfile = () => {
 
             {false ? (
               <Form.Item
-                name={"profileActivate"}
                 label="Switch"
+                name={"profileActivate"}
                 valuePropName="checked"
                 initialValue={false}
               >
@@ -99,23 +98,45 @@ const CreateCompaneyProfile = () => {
               </Form.Item>
             ) : null}
             {/* ----------------------------------------------------------------------------------------------------- */}
-            <Form.Item name={"userName"} label="Name">
+            <Form.Item
+              rules={[{ required: true, message: "Please input your Name!" }]}
+              label="Name"
+              name={"userName"}
+            >
               <Input />
             </Form.Item>
             <Form.Item name={"email"} label="Email">
               <Input placeholder={auth.currentUser?.email} disabled={true} />
             </Form.Item>
-            <Form.Item label="Mobile" name={"mobileNumber"}>
+            <Form.Item
+              rules={[{ required: true, message: "Please input your Mobile!" }]}
+              label="Mobile"
+              name={"mobileNumber"}
+            >
               <Input type="number" />
             </Form.Item>
-            <Form.Item label="About" name={"Bio"}>
+            <Form.Item
+              rules={[{ required: true, message: "Please input your About!" }]}
+              label="About"
+              name={"Bio"}
+            >
               <TextArea rows={4} />
             </Form.Item>
 
-            <Form.Item label="Address" name={"address"}>
+            <Form.Item
+              rules={[
+                { required: true, message: "Please input your Address!" },
+              ]}
+              label="Address"
+              name={"address"}
+            >
               <Input type="text" />
             </Form.Item>
-            <Form.Item label="City" name={"city"}>
+            <Form.Item
+              rules={[{ required: true, message: "Please input your City!" }]}
+              label="City"
+              name={"city"}
+            >
               <Select>
                 <Select.Option value="Karachi">Karachi</Select.Option>
                 <Select.Option value="Lahore">Lahore</Select.Option>
@@ -126,7 +147,13 @@ const CreateCompaneyProfile = () => {
               </Select>
             </Form.Item>
 
-            <Form.Item label="Companey Size" name={"size"}>
+            <Form.Item
+              rules={[
+                { required: true, message: "Please input your Company Size!" },
+              ]}
+              label="Company Size"
+              name={"size"}
+            >
               <Select>
                 <Select.Option value="10-20">10-20</Select.Option>
                 <Select.Option value="20-50">20-50</Select.Option>
@@ -136,7 +163,13 @@ const CreateCompaneyProfile = () => {
                 <Select.Option value="500+">500+</Select.Option>
               </Select>
             </Form.Item>
-            <Form.Item label="Companey Type" name={"Type"}>
+            <Form.Item
+              rules={[
+                { required: true, message: "Please input your Company Type!" },
+              ]}
+              label="Company Type"
+              name={"Type"}
+            >
               <Select>
                 <Select.Option value="Startup">Startup</Select.Option>
                 <Select.Option value="Consultation">Consultation</Select.Option>
@@ -181,4 +214,4 @@ const CreateCompaneyProfile = () => {
   );
 };
 
-export default CreateCompaneyProfile;
+export default CreateCompanyProfile;

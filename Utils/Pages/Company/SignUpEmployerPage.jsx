@@ -1,9 +1,10 @@
 import { Button, message, Steps } from "antd";
 import React, { useState } from "react";
-import { CreateUserProfile } from "../Components/CreateUserProfile";
-import SignIn from "../Components/SignIn";
+import { auth } from "../../../FirebaseApp/firebase-config";
+import CreateCompanyProfile from "../../Components/Company/CreateCompanyProfile";
+import SignIn from "../../Components/SignIn";
 
-const SignUpUserPage = () => {
+const SignUpEmployerPage = () => {
   const [current, setCurrent] = useState(0);
   const { Step } = Steps;
   const next = (e) => {
@@ -12,18 +13,17 @@ const SignUpUserPage = () => {
   const steps = [
     {
       title: "First",
-      content: <SignIn current={current} change_Next={next} />,
+      content: <SignIn current={current} change_Next={next}></SignIn>,
     },
     {
       title: "Second",
-      content: <CreateUserProfile current={current} />,
+      content: <CreateCompanyProfile />,
     },
   ];
 
   const prev = () => {
     setCurrent(current - 1);
   };
-
   return (
     <>
       <div className="flex flex-col">
@@ -33,16 +33,21 @@ const SignUpUserPage = () => {
           ))}
         </Steps>
       </div>
-      <div className="steps-content h-5/6">{steps[current].content}</div>
+      <div className="steps-content">{steps[current].content}</div>
       <div className="steps-action">
-        {/* {current === steps.length - 1 && (
+        {current < steps.length - 1 && (
+          <Button type="primary" onClick={() => next()}>
+            Next
+          </Button>
+        )}
+        {current === steps.length - 1 && (
           <Button
             type="primary"
             onClick={() => message.success("Processing complete!")}
           >
             Done
           </Button>
-        )} */}
+        )}
         {current > 0 && (
           <Button className="mx-2" onClick={() => prev()}>
             Previous
@@ -53,4 +58,4 @@ const SignUpUserPage = () => {
   );
 };
 
-export default SignUpUserPage;
+export default SignUpEmployerPage;
