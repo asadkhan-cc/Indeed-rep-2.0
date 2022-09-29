@@ -15,7 +15,7 @@ import {
   Checkbox,
   Upload,
 } from "antd";
-import { auth, db, storage } from "../../FirebaseApp/firebase-config";
+import { auth, db, storage } from "../../../FirebaseApp/firebase-config";
 import { addDoc, collection, doc, setDoc } from "firebase/firestore";
 import { async } from "@firebase/util";
 import {
@@ -25,7 +25,7 @@ import {
   listAll,
   list,
 } from "firebase/storage";
-import { useRouter } from "next/router";
+import Router, { useRouter } from "next/router";
 const { TextArea } = Input;
 
 export const CreateUserProfile = () => {
@@ -110,7 +110,7 @@ export const CreateUserProfile = () => {
       console.error("Error adding document: ", e);
     }
     setBtnLoader((prev) => !prev);
-    router.push("/Dashboard");
+    Router.push("/Dashboard");
   };
 
   return (
@@ -240,13 +240,6 @@ export const CreateUserProfile = () => {
             </Form.Item>
             <Form.Item
               rules={[{ required: true, message: "Please input your Name!" }]}
-              label="CGPA"
-              name={"CGPA"}
-            >
-              <InputNumber max={4.0} min={0} />
-            </Form.Item>
-            <Form.Item
-              rules={[{ required: true, message: "Please input your Name!" }]}
               label="Resume"
               name="resume"
             >
@@ -254,11 +247,18 @@ export const CreateUserProfile = () => {
                 onChange={(eve) => {
                   setImageUpload(eve);
                 }}
-                listType="fileList"
+                listType="picture"
                 maxCount={1}
               >
                 <Button icon={<UploadOutlined />}>Upload Resume</Button>
               </Upload>
+            </Form.Item>
+            <Form.Item
+              rules={[{ required: true, message: "Please input your Name!" }]}
+              label="CGPA"
+              name={"CGPA"}
+            >
+              <InputNumber max={4.0} min={0} />
             </Form.Item>
 
             <div className="flex justify-center align-middle">
@@ -281,7 +281,7 @@ export const CreateUserProfile = () => {
               </Form.Item>
               <br />
               <Form.Item>
-                <Button type="primary" htmlType="submit" loading={setBtnLoader}>
+                <Button type="primary" htmlType="submit" loading={btnLoader}>
                   Register
                 </Button>
               </Form.Item>

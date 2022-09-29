@@ -7,7 +7,7 @@ const SignUp = () => {
       <div className="flex  text-center align-middle justify-center ">
         <Link href={"/SignUp/SignUpUsers"}>
           <div className="grow  border-r-black border-r-2 cursor-pointer">
-            Sighnup For <br />
+            Sign Up For <br />
             <span className="text-cyan-500 active:text-red-500">
               Job Seekers
             </span>
@@ -15,7 +15,7 @@ const SignUp = () => {
         </Link>
         <Link href={"/SignUp/SignUpEmployers"}>
           <div className="grow cursor-pointer">
-            Sighnup For <br />
+            Sign Up For <br />
             <span className="text-cyan-500 active:text-red-500">
               Employeers
             </span>

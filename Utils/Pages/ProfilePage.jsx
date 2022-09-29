@@ -3,9 +3,9 @@ import React, { useEffect, useState } from "react";
 import { doc, getDoc } from "firebase/firestore";
 import { auth, db } from "../../FirebaseApp/firebase-config";
 import { onAuthStateChanged } from "firebase/auth";
-import UpdateUserProfile from "../Components/UpdateUserProfile";
 import { Button } from "antd";
-import UpdateCompanyProfile from "../Components/UpdateCompanyProfile copy";
+import UpdateCompanyProfile from "../Components/Company/UpdateCompanyProfile";
+import UpdateUserProfile from "../Components/User/UpdateUserProfile";
 
 const ProfilePage = () => {
   const [profileData, setProfileData] = useState(null);
@@ -41,13 +41,11 @@ const ProfilePage = () => {
       setUser(status);
     }
   });
-  console.log(
-    user?.email,
-    "akskhhvbdkjabdjaskldnasndansjdnkjasbkjdbasjkbdasbdbsau"
-  );
+  // console.log(user, "user object");
   return (
     <div>
       <h1>role : {profileData?.role}</h1>
+      <h1>Email Verified : {user?.auth?.emailVerified ? "Yes" : "No"}</h1>
 
       {user && profileData && true ? (
         // <div>
@@ -64,6 +62,7 @@ const ProfilePage = () => {
         //   <h1>
         //     profileActivate : {profileData.profileActivate ? "Yes" : "NO"}
         //   </h1>
+        // <h1>role : {profileData.role}</h1>
 
         profileData.role === "User" ? (
           <UpdateUserProfile data={profileData} />

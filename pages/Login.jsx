@@ -8,12 +8,7 @@ const Login = () => {
   // router = useRouter();
   const [user, setUser] = useState(null);
   onAuthStateChanged(auth, (user) => setUser(user));
-  const message = <div>Already LoggedIn</div>;
-  if (!user) {
-    return <LoginPage />;
-  } else {
-    return { message };
-  }
+  return <>{user ? <div>Already LoggedIn</div> : <LoginPage />}</>;
 };
 
 export default Login;
