@@ -19,11 +19,12 @@ import { doc, setDoc } from "firebase/firestore";
 import moment from "moment";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { auth, db, storage } from "../../../FirebaseApp/firebase-config";
+import { useRouter } from "next/router";
 
 const { TextArea } = Input;
 const UpdateUserProfile = (props) => {
   const profileData = props.data;
-
+  const router = useRouter();
   // uploading Image And geting Download Url
   // {{(*Start*)}}
   const [imageUpload, setImageUpload] = useState(null);
@@ -90,6 +91,7 @@ const UpdateUserProfile = (props) => {
 
   const onSubmitHandeler = async (values) => {
     setBtnLoading((prev) => !prev);
+    toggle();
     console.log(values, "Before Change");
     valueChecker(values);
 
@@ -124,23 +126,21 @@ const UpdateUserProfile = (props) => {
     try {
       const docRef = await setDoc(doc(db, "users", values.email), values);
       console.log("Document written with ID: ", values.email);
-      toggle();
+
       alert("Success!");
     } catch (e) {
       console.error("Error adding document: ", e);
       alert("ERROR");
     }
+
     setBtnLoading((prev) => !prev);
+    toggle();
     router.push("/Profile");
   };
   return (
     <div>
       <div className="text-right">
-        Edit Profile :{" "}
-        {/* () => {
-            toggleEdit ? toggleEdit.toString() : !toggleEdit.toString();
-          } */}
-        <Switch unchecked={"true"} onClick={toggle} />
+        Edit Profile : <Switch unchecked={"true"} onClick={toggle} />
       </div>
       <Form
         labelCol={{ span: 4 }}

@@ -5,7 +5,6 @@ import { userAuthDetail } from "./_app";
 
 const Profile = () => {
   const userAuthDetailContext = useContext(userAuthDetail);
-  console.log(userAuthDetailContext);
   return (
     <div>
       {userAuthDetailContext?.user?.email ? <ProfilePage /> : <LoginErr />}
