@@ -12,13 +12,19 @@ const ViewCalander = () => {
   const getAllJobEvents = async () => {
     const querySnapshot = await getDocs(collection(db, "jobEvents"));
     const queryData = await querySnapshot.docs;
-    const arrqueryData = [];
+    const arrQueryData = [];
+    const arrQueryID = [];
     const arr = await queryData.forEach((e) => {
-      arrqueryData.push(e.data());
-      //   console.log(e.data());
+      arrQueryID.push(e.id);
+      arrQueryData.push(e.data());
     });
-    console.log(arrqueryData, "arrqueryData");
-    return arrqueryData;
+    arrQueryData.map((elem, index) => {
+      elem.id = arrQueryID[index];
+      elem.start = elem.start.toDate();
+      elem.end = elem.end.toDate();
+    });
+    // console.log(arrQueryData, "arrQueryData");
+    return arrQueryData;
   };
   //now check for auth Role <string>User||Company||Admin<string>
   //if "User" show all jobEvent if "Company" check createdBy first then only show data created by the company
@@ -26,14 +32,15 @@ const ViewCalander = () => {
     const data = getAllJobEvents();
     data
       .then((e) => {
+        console.log(e, "before");
         setCollectionData(e);
+        console.log(e, "after");
       })
       .catch((err) => {
         console.error(err);
       });
   }, []);
-
-  console.log(collectionData);
+  // console.log(collectionData);
   return (
     <>
       <div style={{ height: 700 }}>
