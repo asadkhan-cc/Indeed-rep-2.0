@@ -247,7 +247,7 @@ function SiteLayout({ children }) {
               textAlign: "center",
             }}
           >
-            Ant Design ©2018 Created by Ant UED
+            Indeed Replica ©2022 Created by Asad Khan
           </Footer>
         </Layout>
       </Layout>

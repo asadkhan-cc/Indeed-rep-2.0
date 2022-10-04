@@ -5,7 +5,7 @@ import { auth } from "../FirebaseApp/firebase-config";
 import CreateEvent from "../Utils/Components/Company/CreateEvent";
 import Loading from "../Utils/Components/Loading";
 import LoginErr from "../Utils/Components/LoginErr";
-import ViewCalander from "../Utils/Components/ViewCalander";
+import ViewCalender from "../Utils/Components/ViewCalender";
 import DashBoardPageAdmin from "../Utils/Pages/Admin/DashBoardPageAdmin";
 import DashBoardPageCompany from "../Utils/Pages/Company/DashBoardPageCompany";
 import DashBoardPageStudent from "../Utils/Pages/User/DashBoardPageStudent";
@@ -21,11 +21,11 @@ const Dashboard = () => {
   // const allViews = Object.keys(BigCalendar.Views).map(
   //   (k) => BigCalendar.Views[k]
   // );
-
+  console.log(userAuthDetailContext);
   return (
     <div>
       <CreateEvent></CreateEvent>
-      <ViewCalander></ViewCalander>
+      <ViewCalender></ViewCalender>
       {userAuthDetailContext?.user ? (
         userAuthDetailContext?.profileData?.role === "Admin" ? (
           <DashBoardPageAdmin />

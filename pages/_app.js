@@ -47,8 +47,8 @@ function MyApp({ Component, pageProps }) {
     gettingDocumentFromFirestore();
     if (profileData === null) {
       setTimeout(() => {
-        setFlagForUseeffect(3);
-      }, 1000);
+        setFlagForUseeffect(4);
+      }, 100000);
     }
   }, [user, flagForUseeffect]);
 

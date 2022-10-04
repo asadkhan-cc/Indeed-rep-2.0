@@ -72,7 +72,7 @@ const CreateCompanyProfile = () => {
 
   return (
     <>
-      <div>
+      <div className="">
         <p className="text-center">Create Company Profile</p>
         <>
           <Form
@@ -181,7 +181,7 @@ const CreateCompanyProfile = () => {
             </Form.Item>
             {/* ----------------------------------------------------------------------------------------------------- */}
 
-            <div className="flex justify-center align-middle">
+            <div className="text-center">
               <Form.Item
                 name="agreement"
                 initialValue={false}
@@ -199,7 +199,8 @@ const CreateCompanyProfile = () => {
                   I have read the <a href="">agreement</a>
                 </Checkbox>
               </Form.Item>
-              <br />
+            </div>
+            <div className="flex justify-end mx-24">
               <Form.Item>
                 <Button type="primary" htmlType="submit" loading={loading}>
                   Register

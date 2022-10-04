@@ -141,31 +141,31 @@ export const CreateUserProfile = () => {
             ) : null}
             {/* ----------------------------------------------------------------------------------------------------- */}
             <Form.Item
-              rules={[{ required: true, message: "Please input your Name!" }]}
+              rules={[{ required: true, message: "Please input your Name" }]}
               label="Name"
               name={"userName"}
             >
               <Input />
             </Form.Item>
             <Form.Item label="Email" name={"email"}>
-              <Input placeholder={auth.currentUser?.email} disabled={true} />
+              <Input placeHolder={auth.currentUser?.email} disabled={true} />
             </Form.Item>
             <Form.Item
-              rules={[{ required: true, message: "Please input your Name!" }]}
+              rules={[{ required: true, message: "Please input your Mobile" }]}
               label="Mobile"
               name={"mobileNumber"}
             >
               <Input type="number" />
             </Form.Item>
             <Form.Item
-              rules={[{ required: true, message: "Please input your Name!" }]}
+              rules={[{ required: true, message: "Please input your Date" }]}
               label="Date Of Birth"
               name={"DOB"}
             >
               <DatePicker />
             </Form.Item>
             <Form.Item
-              rules={[{ required: true, message: "Please input your Name!" }]}
+              rules={[{ required: true, message: "Please input your CNIC" }]}
               label="CNIC"
               name={"CNIC"}
             >
@@ -179,7 +179,7 @@ export const CreateUserProfile = () => {
               />
             </Form.Item>
             <Form.Item
-              rules={[{ required: true, message: "Please input your Name!" }]}
+              rules={[{ required: true, message: "Please input your City" }]}
               label="City"
               name={"city"}
             >
@@ -193,21 +193,23 @@ export const CreateUserProfile = () => {
               </Select>
             </Form.Item>
             <Form.Item
-              rules={[{ required: true, message: "Please input your Name!" }]}
+              rules={[{ required: true, message: "Please input your Address" }]}
               label="Address"
               name={"address"}
             >
               <Input type="text" />
             </Form.Item>
             <Form.Item
-              rules={[{ required: true, message: "Please input your Name!" }]}
+              rules={[{ required: true, message: "Please input your About" }]}
               label="About"
               name={"Bio"}
             >
               <TextArea rows={4} />
             </Form.Item>
             <Form.Item
-              rules={[{ required: true, message: "Please input your Name!" }]}
+              rules={[
+                { required: true, message: "Please input your University" },
+              ]}
               label="University"
               name={"university"}
             >
@@ -225,7 +227,7 @@ export const CreateUserProfile = () => {
               </Select>
             </Form.Item>
             <Form.Item
-              rules={[{ required: true, message: "Please input your Name!" }]}
+              rules={[{ required: true, message: "Please input your Degree" }]}
               label="Degree"
               name={"degree"}
             >
@@ -239,7 +241,7 @@ export const CreateUserProfile = () => {
               </Select>
             </Form.Item>
             <Form.Item
-              rules={[{ required: true, message: "Please input your Name!" }]}
+              rules={[{ required: true, message: "Please input your Resume" }]}
               label="Resume"
               name="resume"
             >
@@ -254,7 +256,7 @@ export const CreateUserProfile = () => {
               </Upload>
             </Form.Item>
             <Form.Item
-              rules={[{ required: true, message: "Please input your Name!" }]}
+              rules={[{ required: true, message: "Please input your CGPA" }]}
               label="CGPA"
               name={"CGPA"}
             >

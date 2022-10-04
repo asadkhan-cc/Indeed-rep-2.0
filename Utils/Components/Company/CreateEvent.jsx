@@ -1,6 +1,7 @@
 import { async } from "@firebase/util";
 import { Button, Checkbox, DatePicker, Form, Input } from "antd";
 import { addDoc, collection, Timestamp } from "firebase/firestore";
+import moment from "moment";
 import React, { useContext, useState } from "react";
 import { db } from "../../../FirebaseApp/firebase-config";
 import { userAuthDetail } from "../../../pages/_app";
@@ -11,20 +12,21 @@ const CreateEvent = () => {
   const [rangeString, setRangeString] = useState(null);
   const [btnLoader, setBtnLoader] = useState(false);
   const onDateChange = (value, dateString) => {
-    // console.log("Selected Time: ", value);
+    console.log("Selected Time: ", value);
     setRangeString(dateString);
-    console.log("Formatted Selected Time: ", dateString);
+    // console.log("Formatted Selected Time: ", dateString);
   };
   const checkBoxValChecker = (eve) => {
-    console.log(eve);
     setallDayEvent((prev) => !prev);
   };
   const createEventInFireStore = async (data) => {
     try {
       const docRef = await addDoc(collection(db, "jobEvents"), data);
       console.log("Document written with ID: ", docRef.id);
+      setBtnLoader((prev) => !prev);
     } catch (error) {
       console.error("Error adding document: ", error);
+      setBtnLoader((prev) => !prev);
     }
   };
   const formSubmitHandler = (e) => {
@@ -34,13 +36,16 @@ const CreateEvent = () => {
     e.end = Timestamp.fromDate(e.range[1].toDate());
     e.createdBy = userAuthDetailContext?.user.email;
     e.range = rangeString;
-    console.log(e, "    Event   ");
+    // console.log(e, "    Event   ");
     createEventInFireStore(e);
-    setBtnLoader((prev) => !prev);
   };
   return (
     <div>
-      <Form onFinish={formSubmitHandler}>
+      <Form
+        onFinish={formSubmitHandler}
+        labelCol={{ span: 8 }}
+        wrapperCol={{ span: 12 }}
+      >
         <Form.Item
           rules={[{ required: true, message: "Please Input Event Title!" }]}
           name="title"
@@ -48,14 +53,12 @@ const CreateEvent = () => {
         >
           <Input type="text"></Input>
         </Form.Item>
-        <Form.Item name="allDay">
+        <Form.Item name="allDay" label="All Day Event">
           <Checkbox
             defaultChecked={true}
             value={allDayEvent}
             onChange={checkBoxValChecker}
-          >
-            Allday
-          </Checkbox>
+          ></Checkbox>
         </Form.Item>
         <Form.Item
           rules={[{ required: true, message: "Please Select Range Of Event!" }]}
@@ -70,6 +73,15 @@ const CreateEvent = () => {
             onChange={onDateChange}
             // onOk={onOk}
           />
+        </Form.Item>
+        <Form.Item
+          rules={[
+            { required: true, message: "Please Input Event Description!" },
+          ]}
+          name="desc"
+          label="Event Description"
+        >
+          <Input type="text"></Input>
         </Form.Item>
         <Form.Item>
           <Button type="primary" htmlType="submit" loading={btnLoader}>

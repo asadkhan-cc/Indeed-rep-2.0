@@ -35,19 +35,6 @@ const SignUpEmployerPage = () => {
       </div>
       <div className="steps-content">{steps[current].content}</div>
       <div className="steps-action">
-        {current < steps.length - 1 && (
-          <Button type="primary" onClick={() => next()}>
-            Next
-          </Button>
-        )}
-        {current === steps.length - 1 && (
-          <Button
-            type="primary"
-            onClick={() => message.success("Processing complete!")}
-          >
-            Done
-          </Button>
-        )}
         {current > 0 && (
           <Button className="mx-2" onClick={() => prev()}>
             Previous

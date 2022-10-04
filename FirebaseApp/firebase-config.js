@@ -36,6 +36,16 @@ const firebaseConfig = {
   messagingSenderId: "218923915292",
   appId: "1:218923915292:web:32ab953ff2f977a0ff67d9",
   measurementId: "G-KYEF431LZX",
+  //
+  //  DB Credentials for Disaster Recovery
+  //
+  // {apiKey: "AIzaSyDif7Nm-yq7rL9N20ImIAIA-aQT9t0hzxA",
+  //   authDomain: "indeed-overload.firebaseapp.com",
+  //   projectId: "indeed-overload",
+  //   storageBucket: "indeed-overload.appspot.com",
+  //   messagingSenderId: "625552381580",
+  //   appId: "1:625552381580:web:a6e05cf72e7d2752c04da9",
+  //   measurementId: "G-X0DT9HF9LW",}
 };
 
 // Initialize Firebase
@@ -86,6 +96,8 @@ const registerWithEmailAndPassword = async (name = auth, email, password) => {
   try {
     const res = await createUserWithEmailAndPassword(name, email, password);
     const user = res.user;
+    console.log(res, "res");
+    // res.User.sendEmailVerification();
     // const setUser = await addDoc(collection(db, "users"), {
     //   uid: user.uid,
     //   name,
@@ -112,8 +124,9 @@ const sendPasswordReset = async (email) => {
   }
 };
 const logout = () => {
-  Router.push("/Login");
+  window.location.reload(false);
   signOut(auth);
+  Router.push("/Login");
 };
 export {
   auth,
