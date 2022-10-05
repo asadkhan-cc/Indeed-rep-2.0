@@ -14,6 +14,7 @@ import {
   Switch,
   Checkbox,
   Upload,
+  message,
 } from "antd";
 import { doc, setDoc } from "firebase/firestore";
 import moment from "moment";
@@ -126,11 +127,10 @@ const UpdateUserProfile = (props) => {
     try {
       const docRef = await setDoc(doc(db, "users", values.email), values);
       console.log("Document written with ID: ", values.email);
-
-      alert("Success!");
+      message.success("Successfully Updated Profile !");
     } catch (e) {
       console.error("Error adding document: ", e);
-      alert("ERROR");
+      message.error("Error Updated Profile !");
     }
 
     setBtnLoading((prev) => !prev);

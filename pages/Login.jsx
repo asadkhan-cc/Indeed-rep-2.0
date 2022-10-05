@@ -2,7 +2,7 @@ import { onAuthStateChanged } from "firebase/auth";
 import Router, { useRouter } from "next/router";
 import { useState } from "react";
 import { auth } from "../FirebaseApp/firebase-config";
-import LoginPage from "../Utils/Pages/LogInPage";
+import LoginPage from "../src/Pages/LogInPage";
 
 const Login = () => {
   // router = useRouter();

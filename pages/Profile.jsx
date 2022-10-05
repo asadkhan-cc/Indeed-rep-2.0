@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
-import LoginErr from "../Utils/Components/LoginErr";
-import ProfilePage from "../Utils/Pages/ProfilePage";
+import LoginErr from "../src/Components/LoginErr";
+import ProfilePage from "../src/Pages/ProfilePage";
 import { userAuthDetail } from "./_app";
 
 const Profile = () => {

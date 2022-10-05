@@ -1,6 +1,6 @@
 import "../styles/globals.css";
 import "antd/dist/antd.css";
-import Layout from "../Utils/Components/Layout";
+import Layout from "../src/Components/Layout";
 import { onAuthStateChanged } from "firebase/auth";
 import { createContext, useContext, useEffect, useState } from "react";
 import { auth, db } from "../FirebaseApp/firebase-config";

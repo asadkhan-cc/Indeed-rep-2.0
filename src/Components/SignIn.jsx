@@ -9,17 +9,19 @@ const SignIn = (props) => {
 
   const onFinish = (values) => {
     // console.log("Received values of form: ", values);
-    registerWithEmailAndPassword(
-      auth,
-      values.email,
-      values.confirmPassword
-    ).then((eve) => {
-      if (eve.message) {
-        console.log(eve);
-      } else props.change_Next();
+    props.setCredentials(values);
+    // registerWithEmailAndPassword(
+    //   auth,
+    //   values.email,
+    //   values.confirmPassword
+    // ).then((eve) => {
+    //   if (eve.message) {
+    //     console.log(eve);
+    //   } else props.change_Next();
 
-      // console.log(eve, "logging eve here");
-    });
+    // console.log(eve, "logging eve here");
+    // });
+    props.change_Next();
   };
   return (
     <div className="h-1/2 w-auto lg:w-1/2 mx-auto shadow border p-4">

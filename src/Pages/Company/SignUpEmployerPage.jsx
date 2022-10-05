@@ -6,6 +6,14 @@ import SignIn from "../../Components/SignIn";
 
 const SignUpEmployerPage = () => {
   const [current, setCurrent] = useState(0);
+  const [credentials, setCredentials] = useState(null);
+  const [formConfirmation, setFormConfirmation] = useState(true);
+  const getCredentials = (e) => {
+    setCredentials(e);
+  };
+  const getProfileConfirmation = (e) => {
+    setFormConfirmation((prev) => !prev);
+  };
   const { Step } = Steps;
   const next = (e) => {
     setCurrent(current + 1);
@@ -13,17 +21,32 @@ const SignUpEmployerPage = () => {
   const steps = [
     {
       title: "First",
-      content: <SignIn current={current} change_Next={next}></SignIn>,
+      content: (
+        <SignIn
+          setCredentials={getCredentials}
+          current={current}
+          change_Next={next}
+        ></SignIn>
+      ),
     },
     {
       title: "Second",
-      content: <CreateCompanyProfile />,
+      content: (
+        <CreateCompanyProfile
+          getProfileConfirmation={getProfileConfirmation}
+          email={credentials.email}
+        />
+      ),
     },
   ];
 
   const prev = () => {
     setCurrent(current - 1);
   };
+  console.log(
+    credentials,
+    "credentialscredentialscredentialscredentialscredentialscredentialscredentials"
+  );
   return (
     <>
       <div className="flex flex-col">

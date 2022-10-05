@@ -1,5 +1,5 @@
 import React from "react";
-import SignUpEmployerPage from "../../Utils/Pages/Company/SignUpEmployerPage";
+import SignUpEmployerPage from "../../src/Pages/Company/SignUpEmployerPage";
 
 const SignUpEmployers = () => {
   return (

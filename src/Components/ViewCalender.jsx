@@ -10,17 +10,24 @@ import { Calendar, momentLocalizer } from "react-big-calendar";
 import moment from "moment";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 const localizer = momentLocalizer(moment);
-import { collection, getDocs, Timestamp } from "firebase/firestore";
+import {
+  doc,
+  setDoc,
+  collection,
+  getDocs,
+  Timestamp,
+} from "firebase/firestore";
 import { db } from "../../FirebaseApp/firebase-config";
-import { Button, Form, Modal } from "antd";
+import { Button, Form, message, Modal } from "antd";
 import CreateEvent from "./Company/CreateEvent";
-import UpdateEvent from "./Company/UpdateEvent";
 import UpdateEventModal from "./Company/UpdateEventModal";
 import { userAuthDetail } from "../../pages/_app";
+import ViewEventModal from "./Company/ViewEventModal";
 
-const ViewCalender = () => {
+const ViewCalender = ({ updateEvent }) => {
   const [collectionData, setCollectionData] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [newEventReRender, setNewEventReRender] = useState(0);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const [modalData, setModalData] = useState(null);
@@ -55,6 +62,22 @@ const ViewCalender = () => {
       console.log(calEvent, "onSelectEvent");
     }, 250);
   }, []);
+  useEffect(() => {
+    const data = getAllJobEvents();
+    data
+      .then((e) => {
+        // console.log(e, "before");
+        // if(){}
+        setCollectionData(e);
+        // console.log(e, "after");
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+    return () => {
+      window.clearTimeout(clickRef?.current);
+    };
+  }, [newEventReRender, updateEvent]);
 
   // const onDoubleClickEvent = useCallback((calEvent) => {
   //   /**
@@ -86,60 +109,65 @@ const ViewCalender = () => {
   };
   //now check for auth Role <string>User||Company||Admin<string>
   //if "User" show all jobEvent if "Company" check createdBy first then only show data created by the company
-
-  const fetchingData = () => {
-    const data = getAllJobEvents();
-    data
-      .then((e) => {
-        if (collectionData?.length === e.length) {
-          console.log("IF Loop Working");
-          // console.log(e, collectionData);
-        } else {
-          setCollectionData(e);
-        }
-      })
-      .catch((err) => {
-        console.error(err);
-      });
+  function valueChecker(param) {
+    Object.keys(param).forEach((key) => {
+      if (param[key] === undefined) {
+        param[key] = "null";
+      }
+    });
+  }
+  const updateEventInFireStore = async (val) => {
+    try {
+      const eventRef = await doc(db, "jobEvents", val.id);
+      await setDoc(eventRef, val, { merge: true });
+      message.success("Event Successfully Updated !");
+    } catch (error) {
+      message.success("Error Updating Event !");
+    }
   };
-  useEffect(() => {
-    // setInterval(() => {
-    //   fetchingData();
-    //   console.log("setInterval Running");
-    // }, 10000);
-    const data = getAllJobEvents();
-    data
-      .then((e) => {
-        // console.log(e, "before");
-        setCollectionData(e);
-        // console.log(e, "after");
-      })
-      .catch((err) => {
-        console.error(err);
-      });
-    return () => {
-      window.clearTimeout(clickRef?.current);
-    };
-  }, []);
   const onCreate = (values) => {
     values.start = Timestamp.fromDate(values.range[0].toDate());
     values.end = Timestamp.fromDate(values.range[1].toDate());
     values.updatedBy = userAuthDetailContext?.user.email;
-    // values.range = [
-    //   values.range[0].toDate().toLocaleString(),
-    //   values.range[1].toDate().toLocaleString(),
-    // ];
+    const newrange = [
+      values.range[0].toDate().toLocaleString(),
+      values.range[1].toDate().toLocaleString(),
+    ];
     console.log(
       values.range[0].toDate().toLocaleString(),
-      "jbahdasdkaisdiuabuidbaiuhbdouhasuobdouaoduoasbndujabdiabiudhbihikdjhanjklsdlk"
+      "values.range[0].toDate().toLocaleString()"
     );
-    console.log(values.range[0].toDate().toLocaleString(), "value.range");
+    console.log(newrange, " newrange newrange newrange value.range");
+    values.range = newrange;
+    valueChecker(values);
+    //getting final values ready to be updated in fire store
+    updateEventInFireStore(values).then((res) => {
+      setNewEventReRender((prev) => prev + 1);
+    });
     console.log("Received values of form: ", values);
     setIsModalOpen(false);
   };
+  const addJobApplicationInFireStore = async (eventDoc) => {
+    const jobApplicationRef = doc(
+      db,
+      "jobEvents",
+      eventDoc,
+      "jobApplications",
+      userAuthDetailContext.profileData.email
+    );
+    try {
+      const docSet = await setDoc(
+        jobApplicationRef,
+        userAuthDetailContext.profileData
+      );
+      return docSet;
+    } catch (error) {
+      return error;
+    }
+  };
   const defaultDate = useMemo(() => new Date(), []);
-  // console.log(collectionData, "collectionData");
-  // console.log(modalData, "modalData");
+  console.log(userAuthDetailContext, "  userAuthDetailContext");
+
   return (
     <>
       <div style={{ height: 500 }}>
@@ -173,6 +201,32 @@ const ViewCalender = () => {
         }}
         data={modalData}
       ></UpdateEventModal>
+
+      {/* STUDENTS MODAL BELOW */}
+      {/* <Modal
+        open={isModalOpen}
+        title="Event Details"
+        okText="APPLY FOR JOB"
+        cancelText="Cancel"
+        onCancel={() => {
+          setIsModalOpen(false);
+        }}
+        onOk={() => {
+          console.log(modalData.id);
+          addJobApplicationInFireStore(modalData.id).then((res) => {
+            console.log(
+              res,
+              "response from Firestore on sucessfull Job Application"
+            );
+            message.success("Job Application Send Sucessfully!");
+          });
+          // adding sub collection data for job application here
+          setIsModalOpen(false);
+        }}
+        className="cursor-pointer"
+      >
+        <ViewEventModal data={modalData} />
+      </Modal> */}
     </>
   );
 };

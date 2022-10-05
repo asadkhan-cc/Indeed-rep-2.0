@@ -21,11 +21,11 @@ const UpdateEventModal = ({ open, onCreate, onCancel, data }) => {
       desc: data?.desc,
     });
 
-    console.log("useeffect rendered");
+    // console.log("useeffect rendered");
   }, [data]);
 
   const onDateChange = (value, dateString) => {
-    console.log("Selected Time: ", value, dateString);
+    // console.log("Selected Time: ", value, dateString);
     setRangeString(dateString);
     // console.log("Formatted Selected Time: ", dateString);
   };
@@ -42,6 +42,7 @@ const UpdateEventModal = ({ open, onCreate, onCancel, data }) => {
       cancelText="Cancel"
       onCancel={() => {
         // form.resetFields();
+        setFormValues({});
         onCancel();
       }}
       onOk={(v) => {
@@ -76,7 +77,7 @@ const UpdateEventModal = ({ open, onCreate, onCancel, data }) => {
           desc: data?.desc,
         }}
         onValuesChange={(e) => {
-          console.log(e, "fromformchange");
+          // console.log(e, "fromformchange");
           setFormValues((prev) => {
             return { ...prev, ...e };
           });

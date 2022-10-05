@@ -1,12 +1,12 @@
 import { async } from "@firebase/util";
-import { Button, Checkbox, DatePicker, Form, Input } from "antd";
+import { Button, Checkbox, DatePicker, Form, Input, message } from "antd";
 import { addDoc, collection, Timestamp } from "firebase/firestore";
 import moment from "moment";
 import React, { useContext, useState } from "react";
 import { db } from "../../../FirebaseApp/firebase-config";
 import { userAuthDetail } from "../../../pages/_app";
 const { RangePicker } = DatePicker;
-const CreateEvent = () => {
+const CreateEvent = (props) => {
   const userAuthDetailContext = useContext(userAuthDetail);
   const [allDayEvent, setallDayEvent] = useState(true);
   const [rangeString, setRangeString] = useState(null);
@@ -35,16 +35,24 @@ const CreateEvent = () => {
     e.start = Timestamp.fromDate(e.range[0].toDate());
     e.end = Timestamp.fromDate(e.range[1].toDate());
     e.createdBy = userAuthDetailContext?.user.email;
+    e.createdByName = userAuthDetailContext?.profileData.userName;
     e.range = rangeString;
-    // console.log(e, "    Event   ");
-    createEventInFireStore(e);
+    console.log(e, "    Event   ");
+    createEventInFireStore(e).then((res) => {
+      message.success("Event Created");
+      props.setUpdateEvents();
+    });
   };
+
   return (
-    <div>
+    <div className="border-black border py-3 px-5 mb-4">
+      <div className="text-2xl font-extrabold text-center text-blue-600 my-2">
+        Add Event
+      </div>
       <Form
         onFinish={formSubmitHandler}
         labelCol={{ span: 8 }}
-        wrapperCol={{ span: 12 }}
+        wrapperCol={{ span: 16 }}
       >
         <Form.Item
           rules={[{ required: true, message: "Please Input Event Title!" }]}
@@ -83,7 +91,7 @@ const CreateEvent = () => {
         >
           <Input type="text"></Input>
         </Form.Item>
-        <Form.Item>
+        <Form.Item className="flex  justify-center">
           <Button type="primary" htmlType="submit" loading={btnLoader}>
             Submit
           </Button>

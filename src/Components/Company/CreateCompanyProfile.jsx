@@ -28,7 +28,7 @@ import {
 import { useRouter } from "next/router";
 import { auth, db } from "../../../FirebaseApp/firebase-config";
 const { TextArea } = Input;
-const CreateCompanyProfile = () => {
+const CreateCompanyProfile = (props) => {
   const Role = "Company";
   const router = useRouter();
   const [loading, setLoading] = useState(false);
@@ -51,22 +51,23 @@ const CreateCompanyProfile = () => {
       ...values,
 
       role: Role,
-      email: auth.currentUser?.email,
+      email: props?.email,
       isadmin: false,
     };
     console.log("after change", values);
 
-    try {
-      const docRef = await setDoc(
-        doc(db, "users", auth.currentUser?.email),
-        values
-      );
-      console.log("Document written with ID: ", auth.currentUser?.email);
-      message.success("Processing complete!");
-      router.push("/Dashboard");
-    } catch (e) {
-      console.error("Error adding document: ", e);
-    }
+    // try {
+    //   const docRef = await setDoc(
+    //     doc(db, "users", auth.currentUser?.email),
+    //     values
+    //   );
+    //   console.log("Document written with ID: ", auth.currentUser?.email);
+    //   message.success("Processing complete!");
+    //   router.push("/Dashboard");
+    // } catch (e) {
+    //   console.error("Error adding document: ", e);
+    // }
+    getProfileConfirmation();
     setLoading((prev) => !prev);
   };
 
@@ -106,7 +107,7 @@ const CreateCompanyProfile = () => {
               <Input />
             </Form.Item>
             <Form.Item name={"email"} label="Email">
-              <Input placeholder={auth.currentUser?.email} disabled={true} />
+              <Input placeholder={props?.email} disabled={true} />
             </Form.Item>
             <Form.Item
               rules={[{ required: true, message: "Please input your Mobile!" }]}

@@ -13,6 +13,7 @@ import {
   Switch,
   Checkbox,
   Upload,
+  message,
 } from "antd";
 import { auth, db } from "../../../FirebaseApp/firebase-config";
 import { doc, setDoc } from "firebase/firestore";
@@ -62,10 +63,10 @@ const UpdateCompanyProfile = (props) => {
       console.log("Document written with ID: ", values.email);
       setBtnLoading((prev) => !prev);
       toggle();
-      alert("Success!");
+      message.success("Successfully Updated Profile !");
     } catch (e) {
       console.error("Error adding document: ", e);
-      alert("ERROR");
+      message.error("Error Updated Profile !");
 
       setBtnLoading((prev) => !prev);
     }
