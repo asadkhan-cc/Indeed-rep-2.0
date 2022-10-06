@@ -130,7 +130,7 @@ export const CreateUserProfile = (props) => {
                 auth.currentUser?.email
               );
               message.success("Sign Up Successful!");
-              Router.push("/Dashboard");
+              Router.push("/dashboard");
             }
           );
         } catch (e) {

@@ -1,5 +1,6 @@
 import { Button, Checkbox, DatePicker, Form, Input, Modal, Radio } from "antd";
 import moment from "moment";
+import Link from "next/link";
 import React, { useEffect, useState } from "react";
 const { RangePicker } = DatePicker;
 
@@ -34,10 +35,11 @@ const UpdateEventModal = ({ open, onCreate, onCancel, data }) => {
     setAllDayEvent((prev) => !prev);
   };
   // console.log(formValues, "formValues");
+  console.log(data, "data");
   return (
     <Modal
       open={open}
-      title="Create a new collection"
+      title="Event Details"
       okText="Update"
       cancelText="Cancel"
       onCancel={() => {
@@ -66,6 +68,7 @@ const UpdateEventModal = ({ open, onCreate, onCancel, data }) => {
         form.resetFields();
       }}
     >
+      <Link href={`/dashboard/${data?.id}`}>View Job Applications</Link>
       <Form
         form={form}
         layout="vertical"

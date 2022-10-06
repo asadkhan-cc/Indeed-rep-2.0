@@ -12,7 +12,7 @@ const Login = () => {
       const user = await logInWithEmailAndPassword(param.email, param.password);
 
       console.log("user from login page", user);
-      router.push("/Dashboard");
+      router.push("/dashboard");
       if (user !== undefined) {
         alert("WHAT WHAT!!!");
       }

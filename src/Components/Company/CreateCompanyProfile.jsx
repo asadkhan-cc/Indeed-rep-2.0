@@ -79,7 +79,7 @@ const CreateCompanyProfile = (props) => {
           (eve) => {
             console.log("Document written with ID: ", auth.currentUser?.email);
             message.success("Sign Up Successful!");
-            router.push("/Dashboard");
+            router.push("/dashboard");
           }
         );
       });

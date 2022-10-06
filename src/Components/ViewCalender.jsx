@@ -166,7 +166,8 @@ const ViewCalender = ({ updateEvent }) => {
     }
   };
   const defaultDate = useMemo(() => new Date(), []);
-  console.log(userAuthDetailContext, "  userAuthDetailContext");
+  console.log(collectionData);
+  // console.log(userAuthDetailContext, "  userAuthDetailContext");
   return (
     <>
       <div style={{ height: 500 }}>

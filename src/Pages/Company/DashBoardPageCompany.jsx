@@ -8,7 +8,6 @@ const DashBoardPageCompany = () => {
   const viewUpdatedEvent = (e) => {
     setUpdateEvents((prev) => prev + 1);
   };
-  console.log(updateEvents, "stateupdateEventsstateupdateEvents");
   return (
     <div>
       {/* <Button type="primary">Create Event</Button>

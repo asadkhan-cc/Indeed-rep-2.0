@@ -176,14 +176,14 @@ function SiteLayout({ children }) {
     getItem(
       "",
       "6",
-      <Link href={"/Dashboard"}>
+      <Link href={"/dashboard"}>
         <div className="w-[200px] mx-auto h-auto">
           <DesktopOutlined />
           <span> Dashboard</span>
         </div>
       </Link>,
       null,
-      "/Dashboard"
+      "/dashboard"
     ),
   ];
 

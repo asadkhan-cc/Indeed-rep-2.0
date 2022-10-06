@@ -42,29 +42,21 @@ function MyApp({ Component, pageProps }) {
   });
   useEffect(() => {
     gettingDocumentFromFirestore();
+    console.log(
+      user?.metadata.creationTime != user?.metadata.lastSignInTime,
+      "user?.metadata.creationTime != user?.metadata.lastSignInTime"
+    );
     if (
       profileData === null &&
       user?.metadata.creationTime != user?.metadata.lastSignInTime
     ) {
-      alert("settimeout");
+      // alert("settimeout");
       setTimeout(() => {
         setGetUserData(false);
       }, 100000);
     }
   }, [user, getUserData]);
 
-  console.log(
-    { user: user, profileData: profileData },
-    "{ user: user, profileData: profileData }{ user: user, profileData: profileData }{ user: user, profileData: profileData }{ user: user, profileData: profileData }{ user: user, profileData: profileData }{ user: user, profileData: profileData }{ user: user, profileData: profileData }{ user: user, profileData: profileData }"
-  );
-  console.log(
-    { user: user, profileData: profileData },
-    "{ user: user, profileData: profileData }{ user: user, profileData: profileData }{ user: user, profileData: profileData }{ user: user, profileData: profileData }{ user: user, profileData: profileData }{ user: user, profileData: profileData }{ user: user, profileData: profileData }{ user: user, profileData: profileData }"
-  );
-  console.log(
-    { user: user, profileData: profileData },
-    "{ user: user, profileData: profileData }{ user: user, profileData: profileData }{ user: user, profileData: profileData }{ user: user, profileData: profileData }{ user: user, profileData: profileData }{ user: user, profileData: profileData }{ user: user, profileData: profileData }{ user: user, profileData: profileData }"
-  );
   return (
     <userAuthDetail.Provider value={{ user: user, profileData: profileData }}>
       <Layout>
