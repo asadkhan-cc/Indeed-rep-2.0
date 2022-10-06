@@ -5,6 +5,11 @@ import SignIn from "../../Components/SignIn";
 
 const SignUpUserPage = () => {
   const [current, setCurrent] = useState(0);
+  const [credentials, setCredentials] = useState(null);
+  const getCredentials = (e) => {
+    setCredentials(e);
+  };
+
   const { Step } = Steps;
   const next = (e) => {
     setCurrent(current + 1);
@@ -12,11 +17,23 @@ const SignUpUserPage = () => {
   const steps = [
     {
       title: "First",
-      content: <SignIn current={current} change_Next={next} />,
+      content: (
+        <SignIn
+          setCredentials={getCredentials}
+          current={current}
+          change_Next={next}
+        />
+      ),
     },
     {
       title: "Second",
-      content: <CreateUserProfile current={current} />,
+      content: (
+        <CreateUserProfile
+          email={credentials?.email}
+          credentials={credentials}
+          current={current}
+        />
+      ),
     },
   ];
 

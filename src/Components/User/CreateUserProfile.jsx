@@ -14,8 +14,14 @@ import {
   Switch,
   Checkbox,
   Upload,
+  message,
 } from "antd";
-import { auth, db, storage } from "../../../FirebaseApp/firebase-config";
+import {
+  auth,
+  db,
+  registerWithEmailAndPassword,
+  storage,
+} from "../../../FirebaseApp/firebase-config";
 import { addDoc, collection, doc, setDoc } from "firebase/firestore";
 import { async } from "@firebase/util";
 import {
@@ -28,7 +34,7 @@ import {
 import Router, { useRouter } from "next/router";
 const { TextArea } = Input;
 
-export const CreateUserProfile = () => {
+export const CreateUserProfile = (props) => {
   const Role = "User";
   const [btnLoader, setBtnLoader] = useState(false);
   const [imageUpload, setImageUpload] = useState(null);
@@ -80,37 +86,65 @@ export const CreateUserProfile = () => {
     console.log(values, "Finish Button Pressed");
     valueChecker(values);
     try {
-      const fileUploadData = await uploadFile();
-      values.DOB = await values.DOB._d.toLocaleDateString();
-      if (fileUploadData.url !== null) {
-        values.resume = await fileUploadData.url;
-        values.snap = await JSON.stringify(fileUploadData.snapshot);
-      }
-
-      values = {
-        ...values,
-
-        role: Role,
-        email: auth.currentUser?.email,
-        isadmin: false,
-      };
-      console.log("after change", values);
-    } catch (err) {
-      console.error(err);
-      return;
-    }
-
-    try {
-      const docRef = await setDoc(
-        doc(db, "users", auth.currentUser?.email),
-        values
+      const response = await registerWithEmailAndPassword(
+        auth,
+        props.credentials?.email,
+        props.credentials?.confirmPassword
       );
-      console.log("Document written with ID: ", auth.currentUser?.email);
+      if (response.successMessage) {
+        message.success(response.successMessage);
+        try {
+          const fileUploadData = await uploadFile();
+          values.DOB = await values.DOB._d.toLocaleDateString();
+          if (fileUploadData.url !== null) {
+            values.resume = await fileUploadData.url;
+            values.snap = await JSON.stringify(fileUploadData.snapshot);
+          }
+
+          values = {
+            ...values,
+
+            role: Role,
+            email: props?.email,
+            isadmin: false,
+          };
+          console.log(
+            "after change",
+            values,
+            props.credentials?.email,
+            props.credentials?.confirmPassword
+          );
+        } catch (err) {
+          console.error(err);
+          message.error(
+            "Error adding Resume! please upload a Smaller or different PDF file"
+          );
+
+          return;
+        }
+        try {
+          await setDoc(doc(db, "users", auth.currentUser?.email), values).then(
+            (eve) => {
+              console.log(
+                "Document written with ID: ",
+                auth.currentUser?.email
+              );
+              message.success("Sign Up Successful!");
+              Router.push("/Dashboard");
+            }
+          );
+        } catch (e) {
+          console.error("Error adding document: ", e);
+          message.error("Error Signing Up!");
+        }
+      } else {
+        message.error(response.errMessage);
+      }
     } catch (e) {
-      console.error("Error adding document: ", e);
+      console.error(e);
+    } finally {
+      setBtnLoader((prev) => !prev);
     }
-    setBtnLoader((prev) => !prev);
-    Router.push("/Dashboard");
   };
 
   return (
@@ -148,21 +182,25 @@ export const CreateUserProfile = () => {
               <Input />
             </Form.Item>
             <Form.Item label="Email" name={"email"}>
-              <Input placeHolder={auth.currentUser?.email} disabled={true} />
+              <Input placeholder={props?.email} disabled={true} />
             </Form.Item>
             <Form.Item
               rules={[{ required: true, message: "Please input your Mobile" }]}
               label="Mobile"
               name={"mobileNumber"}
             >
-              <Input type="number" />
+              <InputNumber
+                maxLength={11}
+                // type={"number"}
+                style={{ width: "100%" }}
+              />
             </Form.Item>
             <Form.Item
               rules={[{ required: true, message: "Please input your Date" }]}
               label="Date Of Birth"
               name={"DOB"}
             >
-              <DatePicker />
+              <DatePicker format="DD/MM/YYYY" />
             </Form.Item>
             <Form.Item
               rules={[{ required: true, message: "Please input your CNIC" }]}

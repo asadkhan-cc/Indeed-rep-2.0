@@ -7,13 +7,10 @@ import SignIn from "../../Components/SignIn";
 const SignUpEmployerPage = () => {
   const [current, setCurrent] = useState(0);
   const [credentials, setCredentials] = useState(null);
-  const [formConfirmation, setFormConfirmation] = useState(true);
   const getCredentials = (e) => {
     setCredentials(e);
   };
-  const getProfileConfirmation = (e) => {
-    setFormConfirmation((prev) => !prev);
-  };
+
   const { Step } = Steps;
   const next = (e) => {
     setCurrent(current + 1);
@@ -33,8 +30,8 @@ const SignUpEmployerPage = () => {
       title: "Second",
       content: (
         <CreateCompanyProfile
-          getProfileConfirmation={getProfileConfirmation}
-          email={credentials.email}
+          email={credentials?.email}
+          credentials={credentials}
         />
       ),
     },

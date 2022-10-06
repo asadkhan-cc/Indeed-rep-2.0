@@ -1,5 +1,6 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
+import { message } from "antd";
 import {
   GoogleAuthProvider,
   getAuth,
@@ -106,12 +107,18 @@ const registerWithEmailAndPassword = async (name = auth, email, password) => {
     // });
 
     // const verified = sendEmailVerification(user.email);
-    return user;
+    const successMessage = "User Created successfully";
+    return { user, successMessage };
   } catch (err) {
     console.error(err);
-    alert(err.message);
-    const message = "Some Error occured";
-    return { message, err };
+    if (err.message == "Firebase: Error (auth/email-already-in-use).") {
+      message.error("An Account Already Exist With This email : " + email);
+    } else {
+      message.error(err.message);
+      const errMessage =
+        "Some Error occurred while SigningUp check Email or Password";
+      return { errMessage, err };
+    }
   }
 };
 const sendPasswordReset = async (email) => {

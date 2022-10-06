@@ -167,7 +167,6 @@ const ViewCalender = ({ updateEvent }) => {
   };
   const defaultDate = useMemo(() => new Date(), []);
   console.log(userAuthDetailContext, "  userAuthDetailContext");
-
   return (
     <>
       <div style={{ height: 500 }}>
@@ -192,41 +191,44 @@ const ViewCalender = ({ updateEvent }) => {
           </div>
         )}
       </div>
-      <UpdateEventModal
-        open={isModalOpen}
-        onCreate={onCreate}
-        onCancel={(e) => {
-          setIsModalOpen(false);
-          console.log(e, "e from Update Event Modal cancel");
-        }}
-        data={modalData}
-      ></UpdateEventModal>
-
-      {/* STUDENTS MODAL BELOW */}
-      {/* <Modal
-        open={isModalOpen}
-        title="Event Details"
-        okText="APPLY FOR JOB"
-        cancelText="Cancel"
-        onCancel={() => {
-          setIsModalOpen(false);
-        }}
-        onOk={() => {
-          console.log(modalData.id);
-          addJobApplicationInFireStore(modalData.id).then((res) => {
-            console.log(
-              res,
-              "response from Firestore on sucessfull Job Application"
-            );
-            message.success("Job Application Send Sucessfully!");
-          });
-          // adding sub collection data for job application here
-          setIsModalOpen(false);
-        }}
-        className="cursor-pointer"
-      >
-        <ViewEventModal data={modalData} />
-      </Modal> */}
+      {/* Conditional Rendering STUDENTS MODAL BELOW for role = User */}
+      {userAuthDetailContext?.profileData?.role === "User" ? (
+        <Modal
+          open={isModalOpen}
+          title="Event Details"
+          okText="APPLY FOR JOB"
+          cancelText="Cancel"
+          onCancel={() => {
+            setIsModalOpen(false);
+          }}
+          onOk={() => {
+            message.success("Processing...!");
+            console.log(modalData.id);
+            addJobApplicationInFireStore(modalData.id).then((res) => {
+              console.log(
+                res,
+                "response from Fire-Store on successful Job Application"
+              );
+              message.success("Job Application Send Successfully!");
+            });
+            // adding sub collection data for job application here
+            setIsModalOpen(false);
+          }}
+          className="cursor-pointer"
+        >
+          <ViewEventModal data={modalData} />
+        </Modal>
+      ) : (
+        <UpdateEventModal
+          open={isModalOpen}
+          onCreate={onCreate}
+          onCancel={(e) => {
+            setIsModalOpen(false);
+            console.log(e, "e from Update Event Modal cancel");
+          }}
+          data={modalData}
+        ></UpdateEventModal>
+      )}
     </>
   );
 };

@@ -10,17 +10,7 @@ const SignIn = (props) => {
   const onFinish = (values) => {
     // console.log("Received values of form: ", values);
     props.setCredentials(values);
-    // registerWithEmailAndPassword(
-    //   auth,
-    //   values.email,
-    //   values.confirmPassword
-    // ).then((eve) => {
-    //   if (eve.message) {
-    //     console.log(eve);
-    //   } else props.change_Next();
 
-    // console.log(eve, "logging eve here");
-    // });
     props.change_Next();
   };
   return (
