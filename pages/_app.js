@@ -60,7 +60,7 @@ function MyApp({ Component, pageProps }) {
   return (
     <userAuthDetail.Provider value={{ user: user, profileData: profileData }}>
       <Layout>
-        <Component {...pageProps} />
+        <Component className="break-all" {...pageProps} />
       </Layout>
     </userAuthDetail.Provider>
   );

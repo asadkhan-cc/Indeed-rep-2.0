@@ -68,7 +68,6 @@ const UpdateEventModal = ({ open, onCreate, onCancel, data }) => {
         form.resetFields();
       }}
     >
-      <Link href={`/dashboard/${data?.id}`}>View Job Applications</Link>
       <Form
         form={form}
         layout="vertical"
@@ -86,17 +85,30 @@ const UpdateEventModal = ({ open, onCreate, onCancel, data }) => {
           });
         }}
       >
+        {data?.type == "Interview" ? (
+          <div className="text-center">
+            <h1>
+              Event Type : <span>Interview</span>
+            </h1>
+          </div>
+        ) : (
+          <>
+            <div className="mb-2 text-center">
+              <Link href={`/dashboard/${data?.id}`}>View Job Applications</Link>
+            </div>
+            <Form.Item name="allDay" label="Select">
+              <Checkbox
+                value={allDayEvent}
+                checked={allDayEvent}
+                onChange={checkBoxValChecker}
+              >
+                Allday
+              </Checkbox>
+            </Form.Item>
+          </>
+        )}
         <Form.Item name="title" label="Event Title">
           <Input type="text"></Input>
-        </Form.Item>
-        <Form.Item name="allDay">
-          <Checkbox
-            value={allDayEvent}
-            checked={allDayEvent}
-            onChange={checkBoxValChecker}
-          >
-            Allday
-          </Checkbox>
         </Form.Item>
         <Form.Item label="Select Range Of Event" name="range">
           <RangePicker

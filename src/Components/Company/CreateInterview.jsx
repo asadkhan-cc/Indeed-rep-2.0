@@ -6,9 +6,8 @@ import React, { useContext, useState } from "react";
 import { db } from "../../../FirebaseApp/firebase-config";
 import { userAuthDetail } from "../../../pages/_app";
 const { RangePicker } = DatePicker;
-const CreateEvent = (props) => {
+const CreateInterview = (props) => {
   const userAuthDetailContext = useContext(userAuthDetail);
-  const [allDayEvent, setallDayEvent] = useState(true);
   const [rangeString, setRangeString] = useState(null);
   const [btnLoader, setBtnLoader] = useState(false);
   const onDateChange = (value, dateString) => {
@@ -16,9 +15,7 @@ const CreateEvent = (props) => {
     setRangeString(dateString);
     // console.log("Formatted Selected Time: ", dateString);
   };
-  const checkBoxValChecker = (eve) => {
-    setallDayEvent((prev) => !prev);
-  };
+
   const createEventInFireStore = async (data) => {
     try {
       const docRef = await addDoc(collection(db, "jobEvents"), data);
@@ -31,24 +28,37 @@ const CreateEvent = (props) => {
   };
   const formSubmitHandler = (e) => {
     setBtnLoader((prev) => !prev);
-    e.allDay = allDayEvent;
+    e.allDay = false;
     e.start = Timestamp.fromDate(e.range[0].toDate());
     e.end = Timestamp.fromDate(e.range[1].toDate());
     e.createdBy = userAuthDetailContext?.user.email;
     e.createdByName = userAuthDetailContext?.profileData.userName;
     e.range = rangeString;
-    e.type = "Job";
+    e.interviewee = props?.student?.userName;
+    e.intervieweeEmail = props?.student?.userName;
+    e.interviewer = props?.company?.createdBy;
+    e.interviewerEmail = props?.company?.createdByName;
+    e.type = "Interview";
     console.log(e, "    Event   ");
-    createEventInFireStore(e).then((res) => {
-      message.success("Event Created");
-      props.setUpdateEvents();
-    });
-  };
+    setBtnLoader(false);
 
+    // createEventInFireStore(e).then((res) => {
+    props.closeModal();
+    //   message.success("Event Created");
+    // });
+  };
+  console.log(
+    props,
+    "PROPS PROPS PROPS PROPS PROPS PROPS PROPS PROPSPROPSPROPSPROPS PROPS PROPSPROPS PROPS"
+  );
   return (
-    <div className="border-black border py-3 px-5 mb-4">
+    <div className=" py-3 px-5 ">
       <div className="text-2xl font-extrabold text-center text-blue-600 my-2">
-        Post Job
+        Create Interview
+      </div>
+      <div className="text-center text-lg p-1 mb-2">
+        Scheduling Interview For
+        <span className="text-blue-500"> {props?.student?.userName}</span>
       </div>
       <Form
         onFinish={formSubmitHandler}
@@ -56,22 +66,18 @@ const CreateEvent = (props) => {
         wrapperCol={{ span: 16 }}
       >
         <Form.Item
-          rules={[{ required: true, message: "Please Input Event Title!" }]}
+          rules={[{ required: true, message: "Please Input Subject!" }]}
           name="title"
-          label="Event Title"
+          label="Subject"
         >
           <Input type="text"></Input>
         </Form.Item>
-        <Form.Item name="allDay" label="All Day Event">
-          <Checkbox
-            defaultChecked={true}
-            value={allDayEvent}
-            onChange={checkBoxValChecker}
-          ></Checkbox>
-        </Form.Item>
+
         <Form.Item
-          rules={[{ required: true, message: "Please Select Range Of Event!" }]}
-          label="Select Range Of Event"
+          rules={[
+            { required: true, message: "Please Select Range Of Interview!" },
+          ]}
+          label="Date and Duration"
           name="range"
         >
           <RangePicker
@@ -85,14 +91,17 @@ const CreateEvent = (props) => {
         </Form.Item>
         <Form.Item
           rules={[
-            { required: true, message: "Please Input Event Description!" },
+            {
+              required: true,
+              message: "Please Input Event Interview Details!",
+            },
           ]}
           name="desc"
-          label="Event Description"
+          label="Details"
         >
           <Input type="text"></Input>
         </Form.Item>
-        <Form.Item className="flex  justify-center">
+        <Form.Item className="flex  justify-center absolute bottom-6 right-[50%] translate-x-10">
           <Button type="primary" htmlType="submit" loading={btnLoader}>
             Submit
           </Button>
@@ -102,4 +111,4 @@ const CreateEvent = (props) => {
   );
 };
 
-export default CreateEvent;
+export default CreateInterview;

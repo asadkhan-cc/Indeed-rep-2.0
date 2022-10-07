@@ -239,7 +239,7 @@ function SiteLayout({ children }) {
                 minHeight: 360,
               }}
             >
-              <main>{children}</main>
+              <main className="break-all">{children}</main>
             </div>
           </Content>
           <Footer
