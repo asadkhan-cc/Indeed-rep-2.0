@@ -3,7 +3,7 @@ import React from "react";
 
 const SignUp = () => {
   return (
-    <section className="flex lg:flex-col align-middle justify-center p-4 lg:p-44">
+    <section className="flex-col align-middle justify-center p-4 lg:p-44">
       <div className="flex  text-center align-middle justify-center ">
         <Link href={"/SignUp/SignUpUsers"}>
           <div className="grow  border-r-black border-r-2 cursor-pointer">

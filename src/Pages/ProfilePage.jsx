@@ -11,7 +11,6 @@ const ProfilePage = () => {
   const [profileData, setProfileData] = useState(null);
   const [user, setUser] = useState(null);
   if (null) {
-    alert("hello Alert from null");
   }
   const gettingDocumentFromFirestore = async () => {
     if (user) {

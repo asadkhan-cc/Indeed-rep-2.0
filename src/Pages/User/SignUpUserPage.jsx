@@ -1,11 +1,15 @@
 import { Button, message, Steps } from "antd";
 import React, { useState } from "react";
-import { auth } from "../../../FirebaseApp/firebase-config";
-import CreateCompanyProfile from "../../Components/Company/CreateCompanyProfile";
+import { CreateUserProfile } from "../../Components/User/CreateUserProfile";
 import SignIn from "../../Components/SignIn";
 
-const SignUpEmployerPage = () => {
+const SignUpUserPage = () => {
   const [current, setCurrent] = useState(0);
+  const [credentials, setCredentials] = useState(null);
+  const getCredentials = (e) => {
+    setCredentials(e);
+  };
+
   const { Step } = Steps;
   const next = (e) => {
     setCurrent(current + 1);
@@ -13,17 +17,30 @@ const SignUpEmployerPage = () => {
   const steps = [
     {
       title: "First",
-      content: <SignIn current={current} change_Next={next}></SignIn>,
+      content: (
+        <SignIn
+          setCredentials={getCredentials}
+          current={current}
+          change_Next={next}
+        />
+      ),
     },
     {
       title: "Second",
-      content: <CreateCompanyProfile />,
+      content: (
+        <CreateUserProfile
+          email={credentials?.email}
+          credentials={credentials}
+          current={current}
+        />
+      ),
     },
   ];
 
   const prev = () => {
     setCurrent(current - 1);
   };
+
   return (
     <>
       <div className="flex flex-col">
@@ -33,21 +50,16 @@ const SignUpEmployerPage = () => {
           ))}
         </Steps>
       </div>
-      <div className="steps-content">{steps[current].content}</div>
+      <div className="steps-content h-5/6">{steps[current].content}</div>
       <div className="steps-action">
-        {current < steps.length - 1 && (
-          <Button type="primary" onClick={() => next()}>
-            Next
-          </Button>
-        )}
-        {current === steps.length - 1 && (
+        {/* {current === steps.length - 1 && (
           <Button
             type="primary"
             onClick={() => message.success("Processing complete!")}
           >
             Done
           </Button>
-        )}
+        )} */}
         {current > 0 && (
           <Button className="mx-2" onClick={() => prev()}>
             Previous
@@ -58,4 +70,4 @@ const SignUpEmployerPage = () => {
   );
 };
 
-export default SignUpEmployerPage;
+export default SignUpUserPage;

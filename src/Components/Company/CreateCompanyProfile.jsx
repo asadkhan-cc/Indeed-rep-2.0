@@ -26,9 +26,13 @@ import {
   list,
 } from "firebase/storage";
 import { useRouter } from "next/router";
-import { auth, db } from "../../../FirebaseApp/firebase-config";
+import {
+  auth,
+  db,
+  registerWithEmailAndPassword,
+} from "../../../FirebaseApp/firebase-config";
 const { TextArea } = Input;
-const CreateCompanyProfile = () => {
+const CreateCompanyProfile = (props) => {
   const Role = "Company";
   const router = useRouter();
   const [loading, setLoading] = useState(false);
@@ -51,28 +55,47 @@ const CreateCompanyProfile = () => {
       ...values,
 
       role: Role,
-      email: auth.currentUser?.email,
+      email: props?.email,
       isadmin: false,
     };
-    console.log("after change", values);
+    console.log(
+      "after change",
+      values,
+      props.credentials?.email,
+      props.credentials?.confirmPassword
+    );
 
     try {
-      const docRef = await setDoc(
-        doc(db, "users", auth.currentUser?.email),
-        values
-      );
-      console.log("Document written with ID: ", auth.currentUser?.email);
-      message.success("Processing complete!");
-      router.push("/Dashboard");
+      await registerWithEmailAndPassword(
+        auth,
+        props.credentials?.email,
+        props.credentials?.confirmPassword
+      ).then((eve) => {
+        if (eve.message) {
+          console.log(eve);
+        }
+        console.log(eve, "logging eve here");
+        setDoc(doc(db, "users", auth.currentUser?.email), values).then(
+          (eve) => {
+            console.log("Document written with ID: ", auth.currentUser?.email);
+            message.success("Sign Up Successful!");
+            router.push("/dashboard");
+          }
+        );
+      });
     } catch (e) {
       console.error("Error adding document: ", e);
+      message.error("Error Signing Up!");
+    } finally {
+      setLoading((prev) => !prev);
     }
-    setLoading((prev) => !prev);
+
+    // setLoading((prev) => !prev);
   };
 
   return (
     <>
-      <div>
+      <div className="">
         <p className="text-center">Create Company Profile</p>
         <>
           <Form
@@ -106,7 +129,7 @@ const CreateCompanyProfile = () => {
               <Input />
             </Form.Item>
             <Form.Item name={"email"} label="Email">
-              <Input placeholder={auth.currentUser?.email} disabled={true} />
+              <Input placeholder={props?.email} disabled={true} />
             </Form.Item>
             <Form.Item
               rules={[{ required: true, message: "Please input your Mobile!" }]}
@@ -181,7 +204,7 @@ const CreateCompanyProfile = () => {
             </Form.Item>
             {/* ----------------------------------------------------------------------------------------------------- */}
 
-            <div className="flex justify-center align-middle">
+            <div className="text-center">
               <Form.Item
                 name="agreement"
                 initialValue={false}
@@ -199,7 +222,8 @@ const CreateCompanyProfile = () => {
                   I have read the <a href="">agreement</a>
                 </Checkbox>
               </Form.Item>
-              <br />
+            </div>
+            <div className="flex justify-end mx-24">
               <Form.Item>
                 <Button type="primary" htmlType="submit" loading={loading}>
                   Register

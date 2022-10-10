@@ -176,14 +176,14 @@ function SiteLayout({ children }) {
     getItem(
       "",
       "6",
-      <Link href={"/Dashboard"}>
+      <Link href={"/dashboard"}>
         <div className="w-[200px] mx-auto h-auto">
           <DesktopOutlined />
           <span> Dashboard</span>
         </div>
       </Link>,
       null,
-      "/Dashboard"
+      "/dashboard"
     ),
   ];
 
@@ -197,11 +197,14 @@ function SiteLayout({ children }) {
         }}
       >
         <Sider
-          collapsible
+          collapsible={true}
           collapsed={collapsed}
-          onCollapse={(value) => setCollapsed(value)}
+          onCollapse={(value) => {
+            console.log(value);
+            setCollapsed(value);
+          }}
         >
-          <div className=" mt-2 mx-auto w-36">
+          <div className=" mt-2 mx-auto w-36 logo">
             <Image src={Logo} alt="logo-Image" width={70} height={70} />
           </div>
           {user ? (
@@ -226,7 +229,9 @@ function SiteLayout({ children }) {
             style={{
               padding: 0,
             }}
-          />
+          >
+            <div className="text-white text-right mr-3">{user?.email}</div>
+          </Header>
           <Content
             style={{
               margin: "0 16px",
@@ -239,7 +244,7 @@ function SiteLayout({ children }) {
                 minHeight: 360,
               }}
             >
-              <main>{children}</main>
+              <main className="break-all">{children}</main>
             </div>
           </Content>
           <Footer
@@ -247,7 +252,7 @@ function SiteLayout({ children }) {
               textAlign: "center",
             }}
           >
-            Ant Design ©2018 Created by Ant UED
+            Indeed Replica ©2022 Created by Asad Khan
           </Footer>
         </Layout>
       </Layout>

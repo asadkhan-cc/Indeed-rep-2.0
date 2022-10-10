@@ -2,7 +2,7 @@ import { onAuthStateChanged } from "firebase/auth";
 import { useRouter } from "next/router";
 import React, { useState } from "react";
 import { auth, logout } from "../FirebaseApp/firebase-config";
-import LoginErr from "../Utils/Components/LoginErr";
+import LoginErr from "../src/Components/LoginErr";
 
 const LogOut = () => {
   const router = useRouter();

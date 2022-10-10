@@ -1,6 +1,6 @@
 import Head from "next/head";
 import Image from "next/image";
-import LoginPage from "../Utils/Pages/LogInPage";
+import LoginPage from "../src/Pages/LogInPage";
 
 export default function Home() {
   return (

@@ -1,10 +1,16 @@
 import { Button, message, Steps } from "antd";
 import React, { useState } from "react";
-import { CreateUserProfile } from "../../Components/User/CreateUserProfile";
+import { auth } from "../../../FirebaseApp/firebase-config";
+import CreateCompanyProfile from "../../Components/Company/CreateCompanyProfile";
 import SignIn from "../../Components/SignIn";
 
-const SignUpUserPage = () => {
+const SignUpEmployerPage = () => {
   const [current, setCurrent] = useState(0);
+  const [credentials, setCredentials] = useState(null);
+  const getCredentials = (e) => {
+    setCredentials(e);
+  };
+
   const { Step } = Steps;
   const next = (e) => {
     setCurrent(current + 1);
@@ -12,18 +18,32 @@ const SignUpUserPage = () => {
   const steps = [
     {
       title: "First",
-      content: <SignIn current={current} change_Next={next} />,
+      content: (
+        <SignIn
+          setCredentials={getCredentials}
+          current={current}
+          change_Next={next}
+        ></SignIn>
+      ),
     },
     {
       title: "Second",
-      content: <CreateUserProfile current={current} />,
+      content: (
+        <CreateCompanyProfile
+          email={credentials?.email}
+          credentials={credentials}
+        />
+      ),
     },
   ];
 
   const prev = () => {
     setCurrent(current - 1);
   };
-
+  console.log(
+    credentials,
+    "credentialscredentialscredentialscredentialscredentialscredentialscredentials"
+  );
   return (
     <>
       <div className="flex flex-col">
@@ -33,16 +53,8 @@ const SignUpUserPage = () => {
           ))}
         </Steps>
       </div>
-      <div className="steps-content h-5/6">{steps[current].content}</div>
+      <div className="steps-content">{steps[current].content}</div>
       <div className="steps-action">
-        {/* {current === steps.length - 1 && (
-          <Button
-            type="primary"
-            onClick={() => message.success("Processing complete!")}
-          >
-            Done
-          </Button>
-        )} */}
         {current > 0 && (
           <Button className="mx-2" onClick={() => prev()}>
             Previous
@@ -53,4 +65,4 @@ const SignUpUserPage = () => {
   );
 };
 
-export default SignUpUserPage;
+export default SignUpEmployerPage;

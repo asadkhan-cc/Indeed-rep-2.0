@@ -1,6 +1,6 @@
 import "../styles/globals.css";
 import "antd/dist/antd.css";
-import Layout from "../Utils/Components/Layout";
+import Layout from "../src/Components/Layout";
 import { onAuthStateChanged } from "firebase/auth";
 import { createContext, useContext, useEffect, useState } from "react";
 import { auth, db } from "../FirebaseApp/firebase-config";
@@ -10,7 +10,7 @@ const userAuthDetail = createContext();
 function MyApp({ Component, pageProps }) {
   const [user, setUser] = useState(null);
   const [profileData, setProfileData] = useState(null);
-  const [flagForUseeffect, setFlagForUseeffect] = useState(0);
+  const [getUserData, setGetUserData] = useState(false);
   const gettingDocumentFromFirestore = async () => {
     if (user) {
       try {
@@ -20,7 +20,7 @@ function MyApp({ Component, pageProps }) {
           // console.log("Document data:", docSnap.data());
           const data = await docSnap.data();
           if (profileData === data) {
-            setFlagForUseeffect((prev) => prev + 1);
+            setGetUserData(true);
           } else {
             setProfileData((prev) => {
               return data;
@@ -30,9 +30,6 @@ function MyApp({ Component, pageProps }) {
           // doc.data() will be undefined in this case
           console.log("No such document!");
           docSnap.data("No Profile Found");
-        }
-        if (flagForUseeffect <= 5) {
-          setFlagForUseeffect((prev) => prev + 1);
         }
       } catch (error) {
         console.error(error);
@@ -45,17 +42,25 @@ function MyApp({ Component, pageProps }) {
   });
   useEffect(() => {
     gettingDocumentFromFirestore();
-    if (profileData === null) {
+    console.log(
+      user?.metadata.creationTime != user?.metadata.lastSignInTime,
+      "user?.metadata.creationTime != user?.metadata.lastSignInTime"
+    );
+    if (
+      profileData === null &&
+      user?.metadata.creationTime != user?.metadata.lastSignInTime
+    ) {
+      // alert("settimeout");
       setTimeout(() => {
-        setFlagForUseeffect(3);
-      }, 1000);
+        setGetUserData(false);
+      }, 100000);
     }
-  }, [user, flagForUseeffect]);
+  }, [user, getUserData]);
 
   return (
     <userAuthDetail.Provider value={{ user: user, profileData: profileData }}>
       <Layout>
-        <Component {...pageProps} />
+        <Component className="break-all" {...pageProps} />
       </Layout>
     </userAuthDetail.Provider>
   );

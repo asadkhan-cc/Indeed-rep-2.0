@@ -24,6 +24,21 @@ Warning: Can't perform a React state update on a component that hasn't mounted y
 LogOut@webpack-internal:///./pages/LogOut.jsx:21:72
 main
 
+const fetchingData = () => {
+    const data = getAllJobEvents();
+    data
+      .then((e) => {
+        if (collectionData?.length === e.length) {
+          console.log("IF Loop Working");
+          // console.log(e, collectionData);
+        } else {
+          setCollectionData(e);
+        }
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+  };
 
 
 Basic pages 
