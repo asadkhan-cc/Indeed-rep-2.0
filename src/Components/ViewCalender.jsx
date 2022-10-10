@@ -196,9 +196,13 @@ const ViewCalender = ({ updateEvent }) => {
       {userAuthDetailContext?.profileData?.role === "User" ? (
         <Modal
           open={isModalOpen}
+          className="cursor-pointer"
           title="Event Details"
           okText="APPLY FOR JOB"
           cancelText="Cancel"
+          okButtonProps={
+            modalData?.type == "Interview" ? { style: { display: "none" } } : {}
+          }
           onCancel={() => {
             setIsModalOpen(false);
           }}
@@ -215,7 +219,6 @@ const ViewCalender = ({ updateEvent }) => {
             // adding sub collection data for job application here
             setIsModalOpen(false);
           }}
-          className="cursor-pointer"
         >
           <ViewEventModal data={modalData} />
         </Modal>

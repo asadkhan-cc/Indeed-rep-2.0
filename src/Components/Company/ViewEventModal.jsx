@@ -27,7 +27,7 @@ const ViewEventModal = (props) => {
   return (
     <div>
       <div className="text-center">
-        <p className="text-2xl font-bold text-blue-900 uppercase">
+        <p className="text-2xl font-bold text-blue-900 uppercase line-clamp-2">
           {props.data.title}
         </p>
         <div className=" ml-10">
@@ -55,7 +55,7 @@ const ViewEventModal = (props) => {
             <span className="w-48 text-left mr-4 font-bold text-lg">
               Desc:{" "}
             </span>
-            <span className=" w-48 text-left w-48 whitespace-nowrap overflow-hidden text-ellipsis self-end md:absolute right-20">
+            <span className=" w-48 text-left line-clamp-3 md:absolute right-20">
               <Tooltip
                 placement="left"
                 title={

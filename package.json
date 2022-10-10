@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@ant-design/icons": "^4.7.0",
     "@tailwindcss/line-clamp": "^0.4.2",
     "antd": "^4.23.2",
     "firebase": "^9.10.0",

@@ -21,9 +21,11 @@ const CreateInterview = (props) => {
       const docRef = await addDoc(collection(db, "jobEvents"), data);
       console.log("Document written with ID: ", docRef.id);
       setBtnLoader((prev) => !prev);
+      return docRef;
     } catch (error) {
       console.error("Error adding document: ", error);
       setBtnLoader((prev) => !prev);
+      return error;
     }
   };
   const formSubmitHandler = (e) => {
@@ -40,17 +42,20 @@ const CreateInterview = (props) => {
     e.interviewerEmail = props?.company?.createdByName;
     e.type = "Interview";
     console.log(e, "    Event   ");
-    setBtnLoader(false);
 
-    // createEventInFireStore(e).then((res) => {
-    props.closeModal();
-    //   message.success("Event Created");
-    // });
+    createEventInFireStore(e)
+      .then((res) => {
+        props.closeModal();
+        message.success("Interview Scheduled Successfully");
+      })
+      .catch(() => {
+        message.Error("Error Scheduling Interview");
+      });
   };
-  console.log(
-    props,
-    "PROPS PROPS PROPS PROPS PROPS PROPS PROPS PROPSPROPSPROPSPROPS PROPS PROPSPROPS PROPS"
-  );
+  // console.log(
+  //   props,
+  //   "PROPS PROPS PROPS PROPS PROPS PROPS PROPS PROPSPROPSPROPSPROPS PROPS PROPSPROPS PROPS"
+  // );
   return (
     <div className=" py-3 px-5 ">
       <div className="text-2xl font-extrabold text-center text-blue-600 my-2">
