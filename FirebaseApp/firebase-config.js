@@ -133,7 +133,7 @@ const sendPasswordReset = async (email) => {
 const logout = () => {
   window.location.reload(false);
   signOut(auth);
-  Router.push("/Login");
+  Router.push("/login");
 };
 export {
   auth,

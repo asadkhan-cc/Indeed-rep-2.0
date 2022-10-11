@@ -106,7 +106,7 @@ const UpdateUserProfile = (props) => {
     values.DOB = values.DOB._d.toLocaleDateString();
     if (fileUploadData.url !== null) {
       values.resume = await fileUploadData.url;
-      values.snap = await JSON.stringify(fileUploadData.snapshot);
+      // values.snap = await JSON.stringify(fileUploadData.snapshot);
     } else {
       values.resume = "default";
       values.snap = "default";
@@ -135,7 +135,7 @@ const UpdateUserProfile = (props) => {
 
     setBtnLoading((prev) => !prev);
     toggle();
-    router.push("/Profile");
+    router.push("/profile");
   };
   return (
     <div>

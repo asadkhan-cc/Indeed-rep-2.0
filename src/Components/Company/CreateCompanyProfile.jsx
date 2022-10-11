@@ -57,6 +57,7 @@ const CreateCompanyProfile = (props) => {
       role: Role,
       email: props?.email,
       isadmin: false,
+      isActive: null,
     };
     console.log(
       "after change",

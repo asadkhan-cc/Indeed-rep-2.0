@@ -34,7 +34,7 @@ const UpdateCompanyProfile = (props) => {
     console.log(err);
     profileData.DOB = moment();
   }
-  const [toggleEdit, setToggleEdit] = useState(true);
+  const [toggleEdit, setToggleEdit] = useState(false);
   const [btnLoading, setBtnLoading] = useState(false);
   const toggle = () => {
     setToggleEdit(!toggleEdit);
@@ -63,6 +63,7 @@ const UpdateCompanyProfile = (props) => {
       console.log("Document written with ID: ", values.email);
       setBtnLoading((prev) => !prev);
       toggle();
+
       message.success("Successfully Updated Profile !");
     } catch (e) {
       console.error("Error adding document: ", e);
@@ -73,18 +74,20 @@ const UpdateCompanyProfile = (props) => {
   };
   return (
     <div>
-      <p className="text-center">UPDAte CompAny ProfILe</p>
+      <p className="text-center">Update Company Profile</p>
 
       <div className="text-right">
         Edit Profile :{" "}
-        <Switch unchecked={toggleEdit.toString()} onClick={toggle} />
+        <Switch
+          defaultChecked={false}
+          unchecked={toggleEdit.toString()}
+          onChange={toggle}
+        />
       </div>
       <Form
         labelCol={{ span: 4 }}
         wrapperCol={{ span: 14 }}
         layout="horizontal"
-        // onValuesChange={null}
-        // disabled={false}
         onFinish={onSubmitHandeler}
         initialValues={{
           userName: props.data.userName,
@@ -97,7 +100,7 @@ const UpdateCompanyProfile = (props) => {
           size: props.data.size,
           Type: props.data.Type,
         }}
-        disabled={toggleEdit}
+        disabled={!toggleEdit}
       >
         {/* ----------------------------------------------------------------------------------------------------- */}
         <div className="flex flex-grow justify-center align-middle items-center text-center">

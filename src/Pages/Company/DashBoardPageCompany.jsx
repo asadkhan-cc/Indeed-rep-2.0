@@ -6,13 +6,16 @@ import ViewCalender from "../../Components/ViewCalender";
 
 const DashBoardPageCompany = () => {
   const [updateEvents, setUpdateEvents] = useState(1);
-  const [ViewCreateEvent, setViewCreateEvent] = useState(true);
+  const [viewCreateEvent, setViewCreateEvent] = useState(true);
+  const closeCreateEvent = () => {
+    setViewCreateEvent(true);
+  };
   const viewUpdatedEvent = (e) => {
     setUpdateEvents((prev) => prev + 1);
   };
   return (
     <div>
-      {ViewCreateEvent ? (
+      {viewCreateEvent ? (
         <div className="my-2 mb-9 align-middle text-center">
           <Button
             onClick={() => {
@@ -27,11 +30,12 @@ const DashBoardPageCompany = () => {
         <>
           <CloseOutlined
             className="absolute right-14 top-24 "
-            onClick={() => {
-              setViewCreateEvent(true);
-            }}
+            onClick={closeCreateEvent}
           />
-          <CreateEvent setUpdateEvents={viewUpdatedEvent}></CreateEvent>
+          <CreateEvent
+            setUpdateEvents={viewUpdatedEvent}
+            closeCreateEvent={closeCreateEvent}
+          ></CreateEvent>
         </>
       )}
       <ViewCalender updateEvent={updateEvents}></ViewCalender>

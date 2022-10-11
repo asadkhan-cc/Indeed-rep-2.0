@@ -1,3 +1,4 @@
+import { getAuth, deleteUser } from "firebase/auth";
 import React, { useState } from "react";
 import { UploadOutlined } from "@ant-design/icons";
 import {
@@ -98,7 +99,7 @@ export const CreateUserProfile = (props) => {
           values.DOB = await values.DOB._d.toLocaleDateString();
           if (fileUploadData.url !== null) {
             values.resume = await fileUploadData.url;
-            values.snap = await JSON.stringify(fileUploadData.snapshot);
+            // values.snap = await JSON.stringify(fileUploadData.snapshot);
           }
 
           values = {
@@ -107,6 +108,7 @@ export const CreateUserProfile = (props) => {
             role: Role,
             email: props?.email,
             isadmin: false,
+            isActive: null,
           };
           console.log(
             "after change",
@@ -135,13 +137,20 @@ export const CreateUserProfile = (props) => {
           );
         } catch (e) {
           console.error("Error adding document: ", e);
-          message.error("Error Signing Up!");
+          message.error("Error Creating Profile!");
         }
       } else {
         message.error(response.errMessage);
       }
     } catch (e) {
       console.error(e);
+      // ----------------
+
+      const auth = await getAuth();
+      const user = await auth.currentUser;
+
+      await deleteUser(user);
+      message.error("Error SigningUp!");
     } finally {
       setBtnLoader((prev) => !prev);
     }

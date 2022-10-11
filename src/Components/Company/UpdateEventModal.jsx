@@ -1,4 +1,5 @@
 import { Button, Checkbox, DatePicker, Form, Input, Modal, Radio } from "antd";
+import TextArea from "antd/lib/input/TextArea";
 import moment from "moment";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
@@ -35,7 +36,6 @@ const UpdateEventModal = ({ open, onCreate, onCancel, data }) => {
     setAllDayEvent((prev) => !prev);
   };
   // console.log(formValues, "formValues");
-  console.log(data, "data");
   return (
     <Modal
       open={open}
@@ -94,7 +94,9 @@ const UpdateEventModal = ({ open, onCreate, onCancel, data }) => {
         ) : (
           <>
             <div className="mb-2 text-center">
-              <Link href={`/dashboard/${data?.id}`}>View Job Applications</Link>
+              <Link href={`/dashboard/jobs/${data?.id}`}>
+                View Job Applications
+              </Link>
             </div>
             <Form.Item name="allDay" label="Select">
               <Checkbox
@@ -121,7 +123,7 @@ const UpdateEventModal = ({ open, onCreate, onCancel, data }) => {
           />
         </Form.Item>
         <Form.Item name="desc" label="Event Description">
-          <Input type="text"></Input>
+          <TextArea type="text"></TextArea>
         </Form.Item>
       </Form>
     </Modal>

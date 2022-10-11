@@ -9,14 +9,17 @@ import {
 } from "firebase/firestore";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import React, { useEffect, useState } from "react";
-import { db } from "../../../FirebaseApp/firebase-config";
-import CreateEvent from "../../../src/Components/Company/CreateEvent";
-import CreateInterview from "../../../src/Components/Company/CreateInterview";
+import React, { useContext, useEffect, useState } from "react";
+import { db } from "../../../../FirebaseApp/firebase-config";
+import CreateEvent from "../../../../src/Components/Company/CreateEvent";
+import CreateInterview from "../../../../src/Components/Company/CreateInterview";
+import { userAuthDetail } from "../../../_app";
 
 const JobApplications = () => {
   const router = useRouter();
   const { jobApplications } = router.query;
+  const userAuthDetailContext = useContext(userAuthDetail);
+
   const [applications, setApplications] = useState(null);
   const [ApplicantData, setApplicantData] = useState(null);
   const [jobDesc, setJobDesc] = useState(null);
@@ -161,7 +164,7 @@ const JobApplications = () => {
             </div>
           </div>
         ) : (
-          "    loading"
+          "loading..."
         )}
       </div>
       <Modal

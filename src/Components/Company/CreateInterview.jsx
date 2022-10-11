@@ -1,5 +1,6 @@
 import { async } from "@firebase/util";
 import { Button, Checkbox, DatePicker, Form, Input, message } from "antd";
+import TextArea from "antd/lib/input/TextArea";
 import { addDoc, collection, Timestamp } from "firebase/firestore";
 import moment from "moment";
 import React, { useContext, useState } from "react";
@@ -104,7 +105,7 @@ const CreateInterview = (props) => {
           name="desc"
           label="Details"
         >
-          <Input type="text"></Input>
+          <TextArea type="text"></TextArea>
         </Form.Item>
         <Form.Item className="flex  justify-center absolute bottom-6 right-[50%] translate-x-10">
           <Button type="primary" htmlType="submit" loading={btnLoader}>

@@ -23,6 +23,7 @@ import CreateEvent from "./Company/CreateEvent";
 import UpdateEventModal from "./Company/UpdateEventModal";
 import { userAuthDetail } from "../../pages/_app";
 import ViewEventModal from "./Company/ViewEventModal";
+import EventWrapper from "./EventWrapper";
 
 const ViewCalender = ({ updateEvent }) => {
   const [collectionData, setCollectionData] = useState(null);
@@ -166,11 +167,11 @@ const ViewCalender = ({ updateEvent }) => {
     }
   };
   const defaultDate = useMemo(() => new Date(), []);
-  console.log(collectionData);
+  // console.log(collectionData);
   // console.log(userAuthDetailContext, "  userAuthDetailContext");
   return (
     <>
-      <div style={{ height: 500 }}>
+      <div style={{ height: 600 }}>
         {collectionData ? (
           <Calendar
             events={collectionData}
@@ -180,7 +181,27 @@ const ViewCalender = ({ updateEvent }) => {
             defaultView="month"
             startAccessor="start"
             endAccessor="end"
-            style={{ height: 500 }}
+            style={{ height: 600 }}
+            // components={{
+            //   eventWrapper: EventWrapper,
+            // }}
+            eventPropGetter={(myEventsList) => {
+              const bgcolor =
+                myEventsList.type == "Interview" ? "#28a745" : "#1890ff";
+              const color =
+                myEventsList.type == "Interview" ? "white" : "white";
+              const Weight =
+                myEventsList.type == "Interview" ? "bold" : "normal";
+
+              return {
+                style: {
+                  backgroundColor: bgcolor,
+                  color: color,
+                  fontWeight: Weight,
+                },
+              };
+            }}
+            // fontSize: "0.1rem",
             // onDoubleClickEvent={onDoubleClickEvent}
             onSelectEvent={onSelectEvent}
           />

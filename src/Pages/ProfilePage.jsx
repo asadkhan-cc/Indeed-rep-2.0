@@ -43,8 +43,8 @@ const ProfilePage = () => {
   // console.log(user, "user object");
   return (
     <div>
-      <h1>role : {profileData?.role}</h1>
-      <h1>Email Verified : {user?.auth?.emailVerified ? "Yes" : "No"}</h1>
+      {/* <h1>role : {profileData?.role}</h1>
+      <h1>Email Verified : {user?.auth?.emailVerified ? "Yes" : "No"}</h1> */}
 
       {user && profileData && true ? (
         // <div>
