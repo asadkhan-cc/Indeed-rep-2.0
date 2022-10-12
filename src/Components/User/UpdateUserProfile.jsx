@@ -106,21 +106,17 @@ const UpdateUserProfile = (props) => {
     values.DOB = values.DOB._d.toLocaleDateString();
     if (fileUploadData.url !== null) {
       values.resume = await fileUploadData.url;
-      // values.snap = await JSON.stringify(fileUploadData.snapshot);
+      values.snap = "default";
     } else {
-      values.resume = "default";
+      values.resume = profileData.resume;
       values.snap = "default";
     }
 
     // if (imageUpload === null) {
-    //   alert("IF IS TRUE");
-    //   values.resume = profileData.resume;
-    //   values.url = profileData.url;
+    //   values.resume = await profileData.resume;
+    //   values.url = await profileData.url;
     // } else {
-    //   alert("Else IS running");
-
     //   values.resume = imageUrl;
-    //   values.url = JSON.stringify(imageSnapShot);
     // }
     console.log(values, "in the end");
 

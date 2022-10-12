@@ -66,11 +66,42 @@ const ViewCalender = ({ updateEvent }) => {
   useEffect(() => {
     const data = getAllJobEvents();
     data
-      .then((e) => {
-        // console.log(e, "before");
-        // if(){}
-        setCollectionData(e);
-        // console.log(e, "after");
+      .then((res) => {
+        if (userAuthDetailContext.profileData.role == "User") {
+          const data = res.filter((elem) => {
+            if (
+              elem.type === "Interview" &&
+              elem.intervieweeEmail !== userAuthDetailContext.profileData.email
+            ) {
+              //elem.intervieweeEmail==userAuthDetailContext.profileData.email
+              //  console.log(elem);
+              return;
+            } else {
+              return elem;
+            }
+          });
+          setCollectionData(data);
+        } else {
+          if (userAuthDetailContext.profileData.role == "Company") {
+            const data = res.filter((elem) => {
+              if (
+                (elem.type === "Job" &&
+                  elem.createdBy !== userAuthDetailContext.profileData.email) ||
+                (elem.type === "Interview" &&
+                  elem.interviewerEmail !==
+                    userAuthDetailContext.profileData.email)
+              ) {
+                // console.log(elem);
+                return;
+              } else {
+                return elem;
+              }
+            });
+            setCollectionData(data);
+          } else {
+            setCollectionData(res);
+          }
+        }
       })
       .catch((err) => {
         console.error(err);
@@ -168,7 +199,7 @@ const ViewCalender = ({ updateEvent }) => {
   };
   const defaultDate = useMemo(() => new Date(), []);
   // console.log(collectionData);
-  // console.log(userAuthDetailContext, "  userAuthDetailContext");
+  console.log(userAuthDetailContext, "  userAuthDetailContext");
   return (
     <>
       <div style={{ height: 600 }}>

@@ -34,13 +34,13 @@ const CreateInterview = (props) => {
     e.allDay = false;
     e.start = Timestamp.fromDate(e.range[0].toDate());
     e.end = Timestamp.fromDate(e.range[1].toDate());
-    e.createdBy = userAuthDetailContext?.user.email;
+    e.createdBy = userAuthDetailContext?.profileData.email;
     e.createdByName = userAuthDetailContext?.profileData.userName;
     e.range = rangeString;
     e.interviewee = props?.student?.userName;
-    e.intervieweeEmail = props?.student?.userName;
-    e.interviewer = props?.company?.createdBy;
-    e.interviewerEmail = props?.company?.createdByName;
+    e.intervieweeEmail = props?.student?.email;
+    e.interviewer = props?.company?.createdByName;
+    e.interviewerEmail = props?.company?.createdBy;
     e.type = "Interview";
     console.log(e, "    Event   ");
 

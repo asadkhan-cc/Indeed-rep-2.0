@@ -131,8 +131,9 @@ const sendPasswordReset = async (email) => {
   }
 };
 const logout = () => {
-  window.location.reload(false);
+  // window.location.reload(false);
   signOut(auth);
+  Router.reload();
   Router.push("/login");
 };
 export {

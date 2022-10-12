@@ -18,10 +18,13 @@ import {
 import { auth, db } from "../../../FirebaseApp/firebase-config";
 import { doc, setDoc } from "firebase/firestore";
 import moment from "moment";
+import { useRouter } from "next/router";
 
 const { TextArea } = Input;
 const UpdateCompanyProfile = (props) => {
   const profileData = props.data;
+  const router = useRouter();
+
   try {
     if (moment(profileData.DOB, "MM/DD/YYYY").isValid()) {
       profileData.DOB = moment(profileData.DOB, "MM/DD/YYYY");
@@ -71,6 +74,7 @@ const UpdateCompanyProfile = (props) => {
 
       setBtnLoading((prev) => !prev);
     }
+    router.push("/profile");
   };
   return (
     <div>
