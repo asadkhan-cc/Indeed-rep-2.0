@@ -9,6 +9,7 @@ const SignIn = (props) => {
 
   const onFinish = (values) => {
     // console.log("Received values of form: ", values);
+    values.email = values.email.toLowerCase();
     props.setCredentials(values);
 
     props.change_Next();

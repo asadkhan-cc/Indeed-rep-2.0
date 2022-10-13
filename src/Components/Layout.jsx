@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import {
   DesktopOutlined,
   ContactsOutlined,
@@ -8,19 +8,22 @@ import {
   UserOutlined,
   LogoutOutlined,
   LoginOutlined,
+  InfoCircleFilled,
+  CheckCircleFilled,
 } from "@ant-design/icons";
-import { Breadcrumb, Layout, Menu } from "antd";
+import { Breadcrumb, Layout, Menu, Tag } from "antd";
 import Image from "next/image";
 import Logo from "../../public/logo.jpg";
 import MenuItem from "antd/lib/menu/MenuItem";
 import Link from "next/link";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "../../FirebaseApp/firebase-config";
+import AvatarPerson from "../../public/whiteguy.png";
+import AvatarCompany from "../../public/building.jpeg";
+import { userAuthDetail } from "../../pages/_app";
 
 function SiteLayout({ children }) {
-  const [user, setUser] = useState(null);
-  onAuthStateChanged(auth, (user) => setUser(user));
-  // console.log(user, "loging Users");
+  const userAuthDetailContext = useContext(userAuthDetail);
 
   const [collapsed, setCollapsed] = useState(false);
   const { Header, Content, Footer, Sider } = Layout;
@@ -56,50 +59,50 @@ function SiteLayout({ children }) {
     getItem(
       "About",
       "2",
-      <Link href={"/About"}>
+      <Link href={"/about"}>
         <div className="w-[200px] mx-auto h-auto">
           <InfoCircleOutlined />
           <span> About</span>
         </div>
       </Link>,
       null,
-      "/About"
+      "/about"
     ),
     getItem(
       "Contact Us",
       "3",
-      <Link href={"/Contact"}>
+      <Link href={"/contact"}>
         <div className="w-[200px] mx-auto h-auto">
           <ContactsOutlined />
           <span> Contact Us</span>
         </div>
       </Link>,
       null,
-      "/Contact"
+      "/contact"
     ),
     getItem(
       "Login",
       "4",
-      <Link href={"/Login"}>
+      <Link href={"/login"}>
         <div className="w-[200px] mx-auto h-auto">
           <LoginOutlined />
           <span> Login</span>
         </div>
       </Link>,
       null,
-      "/Login"
+      "/login"
     ),
     getItem(
       "Join Us",
       "5",
-      <Link href={"/SignUp"}>
+      <Link href={"/signUp"}>
         <div className="w-[200px] mx-auto h-auto">
           <TeamOutlined />
           <span> Join Us</span>
         </div>
       </Link>,
       null,
-      "/SignUp"
+      "/signUp"
     ),
 
     // getItem("Home", "sub1", <UserOutlined />, [
@@ -128,50 +131,50 @@ function SiteLayout({ children }) {
     getItem(
       "About",
       "2",
-      <Link href={"/About"}>
+      <Link href={"/about"}>
         <div className="w-[200px] mx-auto h-auto">
           <InfoCircleOutlined />
           <span> About</span>
         </div>
       </Link>,
       null,
-      "/About"
+      "/about"
     ),
     getItem(
       "Contact Us",
       "3",
-      <Link href={"/Contact"}>
+      <Link href={"/contact"}>
         <div className="w-[200px] mx-auto h-auto">
           <ContactsOutlined />
           <span> Contact Us</span>
         </div>
       </Link>,
       null,
-      "/Contact"
+      "/contact"
     ),
     getItem(
       "Login",
       "4",
-      <Link href={"/LogOut"}>
+      <Link href={"/logOut"}>
         <div className="w-[200px] mx-auto h-auto">
           <LogoutOutlined />
           <span> Logout</span>
         </div>
       </Link>,
       null,
-      "/Login"
+      "/login"
     ),
     getItem(
       "",
       "5",
-      <Link href={"/Profile"}>
+      <Link href={"/profile"}>
         <div className="w-[200px] mx-auto h-auto">
           <UserOutlined />
           <span> profile</span>
         </div>
       </Link>,
       null,
-      "/SignUp"
+      "/signUp"
     ),
     getItem(
       "",
@@ -188,7 +191,6 @@ function SiteLayout({ children }) {
   ];
 
   // const [navItemList, setNavItemList] = useState(items1);
-
   return (
     <>
       <Layout
@@ -207,7 +209,7 @@ function SiteLayout({ children }) {
           <div className=" mt-2 mx-auto w-36 logo">
             <Image src={Logo} alt="logo-Image" width={70} height={70} />
           </div>
-          {user ? (
+          {userAuthDetailContext?.user?.email ? (
             <Menu
               theme="dark"
               defaultSelectedKeys={["2"]}
@@ -230,7 +232,50 @@ function SiteLayout({ children }) {
               padding: 0,
             }}
           >
-            <div className="text-white text-right mr-3">{user?.email}</div>
+            <div className="relative">
+              <div className="absolute right-3 text-white text-right mr-3">
+                {userAuthDetailContext?.profileData ? (
+                  <>
+                    Activation Status :{" "}
+                    {userAuthDetailContext?.profileData?.isActive !== null ? (
+                      userAuthDetailContext?.profileData?.isActive === true ? (
+                        <Tag color="green">Active</Tag>
+                      ) : (
+                        <Tag color="red">InActive</Tag>
+                      )
+                    ) : (
+                      <Tag color="yellow">Pending..</Tag>
+                    )}
+                    {userAuthDetailContext?.profileData?.role == "User" ? (
+                      <>
+                        <Image
+                          alt="Avatar Image"
+                          src={AvatarPerson}
+                          width="20px"
+                          height="20px"
+                          className=" rounded-full  "
+                        />
+                      </>
+                    ) : (
+                      <>
+                        <Image
+                          alt="Avatar Company"
+                          src={AvatarCompany}
+                          width="20px"
+                          height="20px"
+                          className=" rounded-full  "
+                        />
+                      </>
+                    )}
+                  </>
+                ) : (
+                  <></>
+                )}
+                <span className="ml-4 ">
+                  {userAuthDetailContext?.profileData?.userName}
+                </span>
+              </div>
+            </div>
           </Header>
           <Content
             style={{

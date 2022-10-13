@@ -1,5 +1,6 @@
 import { async } from "@firebase/util";
 import { Button, Checkbox, DatePicker, Form, Input, message } from "antd";
+import TextArea from "antd/lib/input/TextArea";
 import { addDoc, collection, Timestamp } from "firebase/firestore";
 import moment from "moment";
 import React, { useContext, useState } from "react";
@@ -33,13 +34,13 @@ const CreateInterview = (props) => {
     e.allDay = false;
     e.start = Timestamp.fromDate(e.range[0].toDate());
     e.end = Timestamp.fromDate(e.range[1].toDate());
-    e.createdBy = userAuthDetailContext?.user.email;
+    e.createdBy = userAuthDetailContext?.profileData.email;
     e.createdByName = userAuthDetailContext?.profileData.userName;
     e.range = rangeString;
     e.interviewee = props?.student?.userName;
-    e.intervieweeEmail = props?.student?.userName;
-    e.interviewer = props?.company?.createdBy;
-    e.interviewerEmail = props?.company?.createdByName;
+    e.intervieweeEmail = props?.student?.email;
+    e.interviewer = props?.company?.createdByName;
+    e.interviewerEmail = props?.company?.createdBy;
     e.type = "Interview";
     console.log(e, "    Event   ");
 
@@ -104,7 +105,7 @@ const CreateInterview = (props) => {
           name="desc"
           label="Details"
         >
-          <Input type="text"></Input>
+          <TextArea type="text"></TextArea>
         </Form.Item>
         <Form.Item className="flex  justify-center absolute bottom-6 right-[50%] translate-x-10">
           <Button type="primary" htmlType="submit" loading={btnLoader}>

@@ -15,6 +15,7 @@ import {
   Checkbox,
   Upload,
   message,
+  Tag,
 } from "antd";
 import { doc, setDoc } from "firebase/firestore";
 import moment from "moment";
@@ -106,21 +107,17 @@ const UpdateUserProfile = (props) => {
     values.DOB = values.DOB._d.toLocaleDateString();
     if (fileUploadData.url !== null) {
       values.resume = await fileUploadData.url;
-      values.snap = await JSON.stringify(fileUploadData.snapshot);
+      values.snap = "default";
     } else {
-      values.resume = "default";
+      values.resume = profileData.resume;
       values.snap = "default";
     }
 
     // if (imageUpload === null) {
-    //   alert("IF IS TRUE");
-    //   values.resume = profileData.resume;
-    //   values.url = profileData.url;
+    //   values.resume = await profileData.resume;
+    //   values.url = await profileData.url;
     // } else {
-    //   alert("Else IS running");
-
     //   values.resume = imageUrl;
-    //   values.url = JSON.stringify(imageSnapShot);
     // }
     console.log(values, "in the end");
 
@@ -135,7 +132,7 @@ const UpdateUserProfile = (props) => {
 
     setBtnLoading((prev) => !prev);
     toggle();
-    router.push("/Profile");
+    router.push("/profile");
   };
   return (
     <div>
@@ -169,7 +166,15 @@ const UpdateUserProfile = (props) => {
         <div className="flex flex-grow justify-center align-middle items-center text-center">
           <h1>
             Profile Activation Status :{" "}
-            {profileData.profileActivate ? "Yes" : "NO"}
+            {profileData.isActive !== null ? (
+              profileData.isActive === true ? (
+                <Tag color="green">Active</Tag>
+              ) : (
+                <Tag color="red">InActive</Tag>
+              )
+            ) : (
+              <Tag color="yellow">Pending..</Tag>
+            )}
           </h1>
         </div>
         <Form.Item

@@ -5,7 +5,7 @@ const SignUp = () => {
   return (
     <section className="flex-col align-middle justify-center p-4 lg:p-44">
       <div className="flex  text-center align-middle justify-center ">
-        <Link href={"/SignUp/SignUpUsers"}>
+        <Link href={"/signUp/signUpUsers"}>
           <div className="grow  border-r-black border-r-2 cursor-pointer">
             Sign Up For <br />
             <span className="text-cyan-500 active:text-red-500">
@@ -13,7 +13,7 @@ const SignUp = () => {
             </span>
           </div>
         </Link>
-        <Link href={"/SignUp/SignUpEmployers"}>
+        <Link href={"/signUp/signUpEmployers"}>
           <div className="grow cursor-pointer">
             Sign Up For <br />
             <span className="text-cyan-500 active:text-red-500">

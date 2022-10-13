@@ -1,5 +1,6 @@
 import { async } from "@firebase/util";
 import { Button, Checkbox, DatePicker, Form, Input, message } from "antd";
+import TextArea from "antd/lib/input/TextArea";
 import { addDoc, collection, Timestamp } from "firebase/firestore";
 import moment from "moment";
 import React, { useContext, useState } from "react";
@@ -42,9 +43,9 @@ const CreateEvent = (props) => {
     createEventInFireStore(e).then((res) => {
       message.success("Event Created");
       props.setUpdateEvents();
+      props.closeCreateEvent();
     });
   };
-
   return (
     <div className="border-black border py-3 px-5 mb-4">
       <div className="text-2xl font-extrabold text-center text-blue-600 my-2">
@@ -90,7 +91,7 @@ const CreateEvent = (props) => {
           name="desc"
           label="Event Description"
         >
-          <Input type="text"></Input>
+          <TextArea type="text"></TextArea>
         </Form.Item>
         <Form.Item className="flex  justify-center">
           <Button type="primary" htmlType="submit" loading={btnLoader}>

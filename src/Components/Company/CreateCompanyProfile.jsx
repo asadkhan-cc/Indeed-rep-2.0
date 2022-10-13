@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { PlusOutlined } from "@ant-design/icons";
 import {
   Form,
@@ -31,8 +31,11 @@ import {
   db,
   registerWithEmailAndPassword,
 } from "../../../FirebaseApp/firebase-config";
+import { userAuthDetail } from "../../../pages/_app";
 const { TextArea } = Input;
 const CreateCompanyProfile = (props) => {
+  const userAuthDetailContext = useContext(userAuthDetail);
+
   const Role = "Company";
   const router = useRouter();
   const [loading, setLoading] = useState(false);
@@ -56,7 +59,8 @@ const CreateCompanyProfile = (props) => {
 
       role: Role,
       email: props?.email,
-      isadmin: false,
+      isAdmin: false,
+      isActive: null,
     };
     console.log(
       "after change",
@@ -75,10 +79,14 @@ const CreateCompanyProfile = (props) => {
           console.log(eve);
         }
         console.log(eve, "logging eve here");
-        setDoc(doc(db, "users", auth.currentUser?.email), values).then(
+        setDoc(doc(db, "users", props.credentials?.email), values).then(
           (eve) => {
             console.log("Document written with ID: ", auth.currentUser?.email);
+
+            userAuthDetailContext?.runReRenderFunction();
+            userAuthDetailContext?.runReRenderFunction();
             message.success("Sign Up Successful!");
+            setLoading((prev) => !prev);
             router.push("/dashboard");
           }
         );
@@ -87,7 +95,6 @@ const CreateCompanyProfile = (props) => {
       console.error("Error adding document: ", e);
       message.error("Error Signing Up!");
     } finally {
-      setLoading((prev) => !prev);
     }
 
     // setLoading((prev) => !prev);
@@ -136,7 +143,11 @@ const CreateCompanyProfile = (props) => {
               label="Mobile"
               name={"mobileNumber"}
             >
-              <Input type="number" />
+              <InputNumber
+                maxLength={11}
+                // type={"number"}
+                style={{ width: "100%" }}
+              />
             </Form.Item>
             <Form.Item
               rules={[{ required: true, message: "Please input your About!" }]}

@@ -1,22 +1,32 @@
 import { CloseOutlined } from "@ant-design/icons";
-import { Button } from "antd";
-import React, { useState } from "react";
+import { Button, message } from "antd";
+import React, { useContext, useState } from "react";
+import { userAuthDetail } from "../../../pages/_app";
 import CreateEvent from "../../Components/Company/CreateEvent";
 import ViewCalender from "../../Components/ViewCalender";
 
 const DashBoardPageCompany = () => {
+  const userAuthDetailContext = useContext(userAuthDetail);
+
   const [updateEvents, setUpdateEvents] = useState(1);
-  const [ViewCreateEvent, setViewCreateEvent] = useState(true);
+  const [viewCreateEvent, setViewCreateEvent] = useState(true);
+  const closeCreateEvent = () => {
+    setViewCreateEvent(true);
+  };
   const viewUpdatedEvent = (e) => {
     setUpdateEvents((prev) => prev + 1);
   };
   return (
     <div>
-      {ViewCreateEvent ? (
+      {viewCreateEvent ? (
         <div className="my-2 mb-9 align-middle text-center">
           <Button
             onClick={() => {
-              setViewCreateEvent(false);
+              if (userAuthDetailContext?.profileData?.isActive === true) {
+                setViewCreateEvent(false);
+              } else {
+                message.warn("Profile Not Activated By Admin");
+              }
             }}
             type="primary"
           >
@@ -27,11 +37,12 @@ const DashBoardPageCompany = () => {
         <>
           <CloseOutlined
             className="absolute right-14 top-24 "
-            onClick={() => {
-              setViewCreateEvent(true);
-            }}
+            onClick={closeCreateEvent}
           />
-          <CreateEvent setUpdateEvents={viewUpdatedEvent}></CreateEvent>
+          <CreateEvent
+            setUpdateEvents={viewUpdatedEvent}
+            closeCreateEvent={closeCreateEvent}
+          ></CreateEvent>
         </>
       )}
       <ViewCalender updateEvent={updateEvents}></ViewCalender>

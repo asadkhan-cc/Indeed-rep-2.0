@@ -14,14 +14,18 @@ import {
   Checkbox,
   Upload,
   message,
+  Tag,
 } from "antd";
 import { auth, db } from "../../../FirebaseApp/firebase-config";
 import { doc, setDoc } from "firebase/firestore";
 import moment from "moment";
+import { useRouter } from "next/router";
 
 const { TextArea } = Input;
 const UpdateCompanyProfile = (props) => {
   const profileData = props.data;
+  const router = useRouter();
+
   try {
     if (moment(profileData.DOB, "MM/DD/YYYY").isValid()) {
       profileData.DOB = moment(profileData.DOB, "MM/DD/YYYY");
@@ -34,7 +38,7 @@ const UpdateCompanyProfile = (props) => {
     console.log(err);
     profileData.DOB = moment();
   }
-  const [toggleEdit, setToggleEdit] = useState(true);
+  const [toggleEdit, setToggleEdit] = useState(false);
   const [btnLoading, setBtnLoading] = useState(false);
   const toggle = () => {
     setToggleEdit(!toggleEdit);
@@ -63,6 +67,7 @@ const UpdateCompanyProfile = (props) => {
       console.log("Document written with ID: ", values.email);
       setBtnLoading((prev) => !prev);
       toggle();
+
       message.success("Successfully Updated Profile !");
     } catch (e) {
       console.error("Error adding document: ", e);
@@ -70,21 +75,24 @@ const UpdateCompanyProfile = (props) => {
 
       setBtnLoading((prev) => !prev);
     }
+    router.push("/profile");
   };
   return (
     <div>
-      <p className="text-center">UPDAte CompAny ProfILe</p>
+      <p className="text-center">Update Company Profile</p>
 
       <div className="text-right">
         Edit Profile :{" "}
-        <Switch unchecked={toggleEdit.toString()} onClick={toggle} />
+        <Switch
+          defaultChecked={false}
+          unchecked={toggleEdit.toString()}
+          onChange={toggle}
+        />
       </div>
       <Form
         labelCol={{ span: 4 }}
         wrapperCol={{ span: 14 }}
         layout="horizontal"
-        // onValuesChange={null}
-        // disabled={false}
         onFinish={onSubmitHandeler}
         initialValues={{
           userName: props.data.userName,
@@ -97,13 +105,21 @@ const UpdateCompanyProfile = (props) => {
           size: props.data.size,
           Type: props.data.Type,
         }}
-        disabled={toggleEdit}
+        disabled={!toggleEdit}
       >
         {/* ----------------------------------------------------------------------------------------------------- */}
         <div className="flex flex-grow justify-center align-middle items-center text-center">
           <h1>
             Profile Activation Status :{" "}
-            {profileData.profileActivate ? "Yes" : "NO"}
+            {profileData.isActive !== null ? (
+              profileData.isActive === true ? (
+                <Tag color="green">Active</Tag>
+              ) : (
+                <Tag color="red">InActive</Tag>
+              )
+            ) : (
+              <Tag color="yellow">Pending..</Tag>
+            )}
           </h1>
         </div>
         <Form.Item name={"userName"} label="Name">

@@ -6,7 +6,7 @@ const LoginErr = () => {
   const [loadingFlag, setLoadingFlag] = useState(false);
   return (
     <div className="mt-28">
-      <Link href={"/Login"}>
+      <Link href={"/login"}>
         <div className="text-center">
           <p> Kindly Login To View This Page</p>
           <hr />{" "}

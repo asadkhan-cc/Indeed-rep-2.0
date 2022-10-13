@@ -11,6 +11,10 @@ function MyApp({ Component, pageProps }) {
   const [user, setUser] = useState(null);
   const [profileData, setProfileData] = useState(null);
   const [getUserData, setGetUserData] = useState(false);
+  const [reRender, setReRender] = useState(0);
+  const runReRender = (e) => {
+    setReRender((prev) => prev + 1);
+  };
   const gettingDocumentFromFirestore = async () => {
     if (user) {
       try {
@@ -19,7 +23,7 @@ function MyApp({ Component, pageProps }) {
         if (docSnap.exists()) {
           // console.log("Document data:", docSnap.data());
           const data = await docSnap.data();
-          if (profileData === data) {
+          if (profileData?.email === data?.email) {
             setGetUserData(true);
           } else {
             setProfileData((prev) => {
@@ -41,7 +45,9 @@ function MyApp({ Component, pageProps }) {
     setUser(eve);
   });
   useEffect(() => {
-    gettingDocumentFromFirestore();
+    if (user !== null) {
+      gettingDocumentFromFirestore();
+    }
     console.log(
       user?.metadata.creationTime != user?.metadata.lastSignInTime,
       "user?.metadata.creationTime != user?.metadata.lastSignInTime"
@@ -51,14 +57,23 @@ function MyApp({ Component, pageProps }) {
       user?.metadata.creationTime != user?.metadata.lastSignInTime
     ) {
       // alert("settimeout");
-      setTimeout(() => {
+      const myTimeOut = setTimeout(() => {
         setGetUserData(false);
-      }, 100000);
+      }, 10000);
+      return () => {
+        clearTimeout(myTimeOut);
+      };
     }
-  }, [user, getUserData]);
+  }, [user?.email, getUserData, reRender]);
 
   return (
-    <userAuthDetail.Provider value={{ user: user, profileData: profileData }}>
+    <userAuthDetail.Provider
+      value={{
+        user: user,
+        profileData: profileData,
+        runReRenderFunction: runReRender,
+      }}
+    >
       <Layout>
         <Component className="break-all" {...pageProps} />
       </Layout>
