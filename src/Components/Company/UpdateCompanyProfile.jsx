@@ -61,7 +61,7 @@ const UpdateCompanyProfile = (props) => {
       ...profileData,
       ...values,
     };
-
+    values.role = "Company";
     try {
       const docRef = await setDoc(doc(db, "users", values.email), values);
       console.log("Document written with ID: ", values.email);

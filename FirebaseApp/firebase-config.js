@@ -19,6 +19,8 @@ import {
   collection,
   where,
   addDoc,
+  setDoc,
+  doc,
 } from "firebase/firestore";
 import Router, { useRouter } from "next/router";
 import { getStorage } from "firebase/storage";
@@ -66,20 +68,26 @@ const googleProvider = new GoogleAuthProvider();
 //   // one to use.
 //   dynamicLinkDomain: "indeed-replica.vercel.app",
 // };
-const signInWithGoogle = async () => {
+const signInWithGoogle = async (role) => {
   try {
     const res = await signInWithPopup(auth, googleProvider);
-    const user = res.user;
-    const q = query(collection(db, "users"), where("uid", "==", user.uid));
-    const docs = await getDocs(q);
-    if (docs.docs.length === 0) {
-      await addDoc(collection(db, "users"), {
-        uid: user.uid,
-        name: user.displayName,
-        authProvider: "google",
-        email: user.email,
-      });
-    }
+    console.log(res, "Google Auth Provider Response Data");
+    const user = res?.user;
+    const values = {
+      userName: user.displayName,
+      email: user.email,
+      emailVerified: true,
+      isActive: null,
+      isAdmin: false,
+      role: role,
+    };
+    await setDoc(doc(db, "users", user.email.toLowerCase()), values).then(
+      (eve) => {
+        console.log("Document written with ID: ", auth.currentUser?.email);
+        message.success("Sign Up Successful!");
+        Router.push("/profile");
+      }
+    );
   } catch (err) {
     console.error(err);
     alert(err.message);

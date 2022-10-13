@@ -1,12 +1,16 @@
+import { GoogleOutlined } from "@ant-design/icons";
 import { Button, Checkbox, Form, Input } from "antd";
 import React from "react";
 import {
   auth,
   registerWithEmailAndPassword,
+  signInWithGoogle,
 } from "../../FirebaseApp/firebase-config";
 const SignIn = (props) => {
   // console.log(props.change_Next);
-
+  const GoogleSignIn = () => {
+    signInWithGoogle(props.role);
+  };
   const onFinish = (values) => {
     // console.log("Received values of form: ", values);
     values.email = values.email.toLowerCase();
@@ -93,6 +97,15 @@ const SignIn = (props) => {
             <a href=""> Login</a>
           </div>
         </Form.Item>
+        <div className="flex justify-center items-center">
+          <div
+            className="flex flex-col justify-center items-center cursor-pointer"
+            onClick={GoogleSignIn}
+          >
+            <GoogleOutlined className="text-2xl" />
+            SignUp With Google
+          </div>
+        </div>
       </Form>
     </div>
   );

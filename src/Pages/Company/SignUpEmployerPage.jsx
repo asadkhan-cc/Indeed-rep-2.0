@@ -20,6 +20,7 @@ const SignUpEmployerPage = () => {
       title: "First",
       content: (
         <SignIn
+          role="Company"
           setCredentials={getCredentials}
           current={current}
           change_Next={next}
