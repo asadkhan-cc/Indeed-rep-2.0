@@ -74,7 +74,7 @@ const AdminProfilePage = () => {
       dataIndex: "userName",
       key: "userName",
       render: (text) => <>{text}</>,
-      sorter: (a, b) => a.userName.length - b.userName.length,
+      sorter: (a, b) => a?.userName?.length - b?.userName?.length,
       sortDirections: ["descend", "ascend"],
       defaultSortOrder: "descend",
     },
@@ -219,20 +219,7 @@ const AdminProfilePage = () => {
     },
     {
       title: "Action",
-      // <>
-      //   <div className="relative">
-      //     {"Action"}
-      //     <span className="absolute right-1 w-5 ml-auto mr-2">
-      //       <Tooltip title="Reload">
-      //         <Button
-      //           type="primary"
-      //           shape="circle"
-      //           icon={<ReloadOutlined />}
-      //         ></Button>
-      //       </Tooltip>
-      //     </span>
-      //   </div>
-      // </>
+      fixed: "right sm:none",
       key: "action",
       render: (_, record) => (
         <Space size="middle">
@@ -274,7 +261,7 @@ const AdminProfilePage = () => {
           { isActive: true },
           { merge: true }
         );
-        console.log("Document updated with ID: ", profile.email);
+        console.log("Document updated with ID: ", profile.email.toLowerCase());
         callReRender();
         message.success("Profile Successfully Activated !");
       } catch (e) {
@@ -318,6 +305,7 @@ const AdminProfilePage = () => {
               Welcome Admin
             </h1>
             <Table
+              scroll={{ x: 1500, y: 800 }}
               columns={adminColumns}
               dataSource={profilesData}
               onChange={onChange}

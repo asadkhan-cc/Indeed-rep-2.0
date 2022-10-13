@@ -15,6 +15,7 @@ import {
   Checkbox,
   Upload,
   message,
+  Tag,
 } from "antd";
 import { doc, setDoc } from "firebase/firestore";
 import moment from "moment";
@@ -165,7 +166,15 @@ const UpdateUserProfile = (props) => {
         <div className="flex flex-grow justify-center align-middle items-center text-center">
           <h1>
             Profile Activation Status :{" "}
-            {profileData.profileActivate ? "Yes" : "NO"}
+            {profileData.isActive !== null ? (
+              profileData.isActive === true ? (
+                <Tag color="green">Active</Tag>
+              ) : (
+                <Tag color="red">InActive</Tag>
+              )
+            ) : (
+              <Tag color="yellow">Pending..</Tag>
+            )}
           </h1>
         </div>
         <Form.Item

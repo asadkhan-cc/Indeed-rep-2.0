@@ -1,5 +1,5 @@
 import { getAuth, deleteUser } from "firebase/auth";
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { UploadOutlined } from "@ant-design/icons";
 import {
   Form,
@@ -20,6 +20,7 @@ import {
 import {
   auth,
   db,
+  logout,
   registerWithEmailAndPassword,
   storage,
 } from "../../../FirebaseApp/firebase-config";
@@ -33,9 +34,11 @@ import {
   list,
 } from "firebase/storage";
 import Router, { useRouter } from "next/router";
+import { userAuthDetail } from "../../../pages/_app";
 const { TextArea } = Input;
 
 export const CreateUserProfile = (props) => {
+  const userAuthDetailContext = useContext(userAuthDetail);
   const Role = "User";
   const [btnLoader, setBtnLoader] = useState(false);
   const [imageUpload, setImageUpload] = useState(null);
@@ -53,7 +56,9 @@ export const CreateUserProfile = (props) => {
     if (imageUpload == null) return { snapshot: null, url: null };
     const imageRef = ref(
       storage,
-      `Resume/${auth.currentUser?.email}/${datetime + imageUpload?.file.name}`
+      `Resume/${props?.credentials?.email?.toLowerCase()}/${
+        datetime + imageUpload?.file.name
+      }`
     );
     const snapshot = await uploadBytes(
       imageRef,
@@ -89,11 +94,11 @@ export const CreateUserProfile = (props) => {
     try {
       const response = await registerWithEmailAndPassword(
         auth,
-        props.credentials?.email,
+        props.credentials?.email.toLowerCase(),
         props.credentials?.confirmPassword
       );
       if (response.successMessage) {
-        message.success(response.successMessage);
+        console.log(response.successMessage);
         try {
           const fileUploadData = await uploadFile();
           values.DOB = await values.DOB._d.toLocaleDateString();
@@ -106,8 +111,8 @@ export const CreateUserProfile = (props) => {
             ...values,
 
             role: Role,
-            email: props?.email,
-            isadmin: false,
+            email: props?.email.toLowerCase(),
+            isAdmin: false,
             isActive: null,
           };
           console.log(
@@ -117,24 +122,24 @@ export const CreateUserProfile = (props) => {
             props.credentials?.confirmPassword
           );
         } catch (err) {
+          await deleteUser(user);
+          message.error("Error SigningUp!");
           console.error(err);
           message.error(
             "Error adding Resume! please upload a Smaller or different PDF file"
           );
-
-          return;
         }
         try {
-          await setDoc(doc(db, "users", auth.currentUser?.email), values).then(
-            (eve) => {
-              console.log(
-                "Document written with ID: ",
-                auth.currentUser?.email
-              );
-              message.success("Sign Up Successful!");
-              Router.push("/dashboard");
-            }
-          );
+          await setDoc(
+            doc(db, "users", auth.currentUser?.email.toLowerCase()),
+            values
+          ).then((eve) => {
+            console.log("Document written with ID: ", auth.currentUser?.email);
+            message.success("Sign Up Successful!");
+            userAuthDetailContext?.runReRenderFunction();
+            userAuthDetailContext?.runReRenderFunction();
+            Router.push("/dashboard");
+          });
         } catch (e) {
           console.error("Error adding document: ", e);
           message.error("Error Creating Profile!");
@@ -148,8 +153,10 @@ export const CreateUserProfile = (props) => {
 
       const auth = await getAuth();
       const user = await auth.currentUser;
-
-      await deleteUser(user);
+      if (user) {
+        await deleteUser(user);
+        await logout();
+      }
       message.error("Error SigningUp!");
     } finally {
       setBtnLoader((prev) => !prev);

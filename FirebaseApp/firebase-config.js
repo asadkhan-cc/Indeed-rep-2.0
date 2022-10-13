@@ -107,7 +107,7 @@ const registerWithEmailAndPassword = async (name = auth, email, password) => {
     // });
 
     // const verified = sendEmailVerification(user.email);
-    const successMessage = "User Created successfully";
+    const successMessage = "User Successfully created";
     return { user, successMessage };
   } catch (err) {
     console.error(err);
@@ -132,8 +132,10 @@ const sendPasswordReset = async (email) => {
 };
 const logout = () => {
   // window.location.reload(false);
+  Router.reload();
   signOut(auth);
   Router.reload();
+
   Router.push("/login");
 };
 export {

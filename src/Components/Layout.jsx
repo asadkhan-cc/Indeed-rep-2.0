@@ -11,7 +11,7 @@ import {
   InfoCircleFilled,
   CheckCircleFilled,
 } from "@ant-design/icons";
-import { Breadcrumb, Layout, Menu } from "antd";
+import { Breadcrumb, Layout, Menu, Tag } from "antd";
 import Image from "next/image";
 import Logo from "../../public/logo.jpg";
 import MenuItem from "antd/lib/menu/MenuItem";
@@ -23,11 +23,7 @@ import AvatarCompany from "../../public/building.jpeg";
 import { userAuthDetail } from "../../pages/_app";
 
 function SiteLayout({ children }) {
-  const [user, setUser] = useState(null);
   const userAuthDetailContext = useContext(userAuthDetail);
-
-  onAuthStateChanged(auth, (user) => setUser(user));
-  // console.log(user, "loging Users");
 
   const [collapsed, setCollapsed] = useState(false);
   const { Header, Content, Footer, Sider } = Layout;
@@ -195,7 +191,6 @@ function SiteLayout({ children }) {
   ];
 
   // const [navItemList, setNavItemList] = useState(items1);
-  console.log(userAuthDetailContext?.profileData?.isActive === undefined);
   return (
     <>
       <Layout
@@ -214,7 +209,7 @@ function SiteLayout({ children }) {
           <div className=" mt-2 mx-auto w-36 logo">
             <Image src={Logo} alt="logo-Image" width={70} height={70} />
           </div>
-          {user ? (
+          {userAuthDetailContext?.user?.email ? (
             <Menu
               theme="dark"
               defaultSelectedKeys={["2"]}
@@ -240,50 +235,39 @@ function SiteLayout({ children }) {
             <div className="relative">
               <div className="absolute right-3 text-white text-right mr-3">
                 {userAuthDetailContext?.profileData ? (
-                  userAuthDetailContext?.profileData?.role == "User" ? (
-                    <>
-                      {userAuthDetailContext?.profileData?.isActive === null ||
-                      userAuthDetailContext?.profileData?.isActive ===
-                        undefined ? (
-                        <>
-                          Activation Status :{" "}
-                          <InfoCircleFilled
-                            style={{
-                              color: "orange",
-                            }}
-                          />
-                          <span className="mr-5"> Pending..</span>
-                        </>
+                  <>
+                    Activation Status :{" "}
+                    {userAuthDetailContext?.profileData?.isActive !== null ? (
+                      userAuthDetailContext?.profileData?.isActive === true ? (
+                        <Tag color="green">Active</Tag>
                       ) : (
-                        <>
-                          Activation Status :{" "}
-                          <CheckCircleFilled
-                            style={{
-                              color: "#66FF00",
-                            }}
-                          />
-                          <span className="mr-5"> Active</span>
-                        </>
-                      )}
-                      <Image
-                        alt="Avatar Image"
-                        src={AvatarPerson}
-                        width="20px"
-                        height="20px"
-                        className=" rounded-full  "
-                      />
-                    </>
-                  ) : (
-                    <>
-                      <Image
-                        alt="Avatar Company"
-                        src={AvatarCompany}
-                        width="20px"
-                        height="20px"
-                        className=" rounded-full  "
-                      />
-                    </>
-                  )
+                        <Tag color="red">InActive</Tag>
+                      )
+                    ) : (
+                      <Tag color="yellow">Pending..</Tag>
+                    )}
+                    {userAuthDetailContext?.profileData?.role == "User" ? (
+                      <>
+                        <Image
+                          alt="Avatar Image"
+                          src={AvatarPerson}
+                          width="20px"
+                          height="20px"
+                          className=" rounded-full  "
+                        />
+                      </>
+                    ) : (
+                      <>
+                        <Image
+                          alt="Avatar Company"
+                          src={AvatarCompany}
+                          width="20px"
+                          height="20px"
+                          className=" rounded-full  "
+                        />
+                      </>
+                    )}
+                  </>
                 ) : (
                   <></>
                 )}

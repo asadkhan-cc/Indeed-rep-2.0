@@ -10,7 +10,7 @@ export const adminColumns = [
     dataIndex: "userName",
     key: "userName",
     render: (text) => <>{text}</>,
-    sorter: (a, b) => a.userName.length - b.userName.length,
+    sorter: (a, b) => a?.userName?.length - b?.userName?.length,
     sortDirections: ["descend", "ascend"],
     defaultSortOrder: "descend",
   },

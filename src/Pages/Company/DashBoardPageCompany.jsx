@@ -1,10 +1,13 @@
 import { CloseOutlined } from "@ant-design/icons";
-import { Button } from "antd";
-import React, { useState } from "react";
+import { Button, message } from "antd";
+import React, { useContext, useState } from "react";
+import { userAuthDetail } from "../../../pages/_app";
 import CreateEvent from "../../Components/Company/CreateEvent";
 import ViewCalender from "../../Components/ViewCalender";
 
 const DashBoardPageCompany = () => {
+  const userAuthDetailContext = useContext(userAuthDetail);
+
   const [updateEvents, setUpdateEvents] = useState(1);
   const [viewCreateEvent, setViewCreateEvent] = useState(true);
   const closeCreateEvent = () => {
@@ -19,7 +22,11 @@ const DashBoardPageCompany = () => {
         <div className="my-2 mb-9 align-middle text-center">
           <Button
             onClick={() => {
-              setViewCreateEvent(false);
+              if (userAuthDetailContext?.profileData?.isActive === true) {
+                setViewCreateEvent(false);
+              } else {
+                message.warn("Profile Not Activated By Admin");
+              }
             }}
             type="primary"
           >

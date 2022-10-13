@@ -1,3 +1,4 @@
+import { DownloadOutlined, InboxOutlined } from "@ant-design/icons";
 import { Button, message, Modal, Space, Table, Tag } from "antd";
 import {
   collection,
@@ -14,6 +15,7 @@ import { db } from "../../../../FirebaseApp/firebase-config";
 import CreateEvent from "../../../../src/Components/Company/CreateEvent";
 import CreateInterview from "../../../../src/Components/Company/CreateInterview";
 import JobDetails from "../../../../src/Components/Company/JobDetails";
+import ViewApplicantData from "../../../../src/Components/Company/ViewApplicantData";
 import { userAuthDetail } from "../../../_app";
 
 const JobApplications = () => {
@@ -24,7 +26,8 @@ const JobApplications = () => {
   const [applications, setApplications] = useState(null);
   const [ApplicantData, setApplicantData] = useState(null);
   const [jobDesc, setJobDesc] = useState(null);
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isInterviewModalOpen, setInterviewIsModalOpen] = useState(false);
+  const [isViewModalOpen, setViewIsModalOpen] = useState(false);
   useEffect(() => {
     console.log(jobApplications);
     getJobApplications();
@@ -68,7 +71,10 @@ const JobApplications = () => {
     }
   };
   const closeModal = () => {
-    setIsModalOpen(false);
+    setInterviewIsModalOpen(false);
+  };
+  const closeViewModal = () => {
+    setViewIsModalOpen(false);
   };
   console.log(jobDesc, "jobDesc");
   console.log(applications, "applications");
@@ -78,7 +84,7 @@ const JobApplications = () => {
       dataIndex: "userName",
       key: "userName",
       render: (text) => <>{text}</>,
-      sorter: (a, b) => a.userName.length - b.userName.length,
+      sorter: (a, b) => a?.userName?.length - b?.userName?.length,
       sortDirections: ["descend", "ascend"],
       defaultSortOrder: "descend",
     },
@@ -201,38 +207,45 @@ const JobApplications = () => {
       dataIndex: "resume",
       key: "resume",
       render: (_, { resume }) => {
-        return resume && <a href={resume}>Download Resume</a>;
+        return (
+          resume && (
+            <Button
+              href={resume}
+              icon={<DownloadOutlined />}
+              className="text-center "
+            >
+              Resume
+            </Button>
+          )
+        );
       },
     },
     {
       title: "Action",
-
+      width: 250,
       key: "action",
       render: (_, record) => (
         <Space size="middle">
           <a
             onClick={(e) => {
-              activate(record);
+              if (userAuthDetailContext.profileData.role !== "Admin") {
+                setApplicantData(record);
+                setInterviewIsModalOpen(true);
+              } else {
+                message.warn("Admin Can't Schedule Interviews");
+              }
             }}
           >
             Schedule Interview
           </a>
-          {/* <a
+          <a
             onClick={(e) => {
-              deactivate(record);
+              setApplicantData(record);
+              setViewIsModalOpen(true);
             }}
           >
-            deactivate
+            View Profile
           </a>
-          <Link
-            href={`/profile/edit/${record.email}?${Object.keys(record)
-              .map((key) => {
-                return `${key}=${encodeURIComponent(record[key])}`;
-              })
-              .join("&")}`}
-          >
-            Edit profile
-          </Link> */}
         </Space>
       ),
     },
@@ -241,13 +254,26 @@ const JobApplications = () => {
     console.log("params", pagination, filters, sorter, extra);
   };
   return (
-    <div>
-      <div className="flex gap-3 flex-wrap min-w-full justify-center md:justify-start  ">
-        {jobDesc ? <JobDetails data={jobDesc} /> : "loading..."}
+    <>
+      <div className="flex gap-3 flex-wrap min-w-full justify-center  ">
+        {jobDesc !== null ? (
+          jobDesc !== undefined ? (
+            <JobDetails data={jobDesc} />
+          ) : (
+            <div className="flex flex-col items-center justify-center my-5">
+              Job Doesn&apos;t Exist Anymore!
+              <div className="self-center">
+                <InboxOutlined className="text-3xl" />
+              </div>
+            </div>
+          )
+        ) : (
+          "loading..."
+        )}
       </div>
       <Modal
         // footer={null}
-        open={isModalOpen}
+        open={isInterviewModalOpen}
         okButtonProps={{ style: { display: "none" } }}
         onCancel={closeModal}
       >
@@ -257,12 +283,30 @@ const JobApplications = () => {
           closeModal={closeModal}
         ></CreateInterview>
       </Modal>
+      <Modal
+        title="Applicants Data"
+        // footer={null}
+        open={isViewModalOpen}
+        okButtonProps={{ style: { display: "none" } }}
+        onCancel={closeViewModal}
+      >
+        <ViewApplicantData student={ApplicantData} />
+      </Modal>
       {applications ? (
         <div>
           <Table
+            scroll={{ x: 1550, y: 300 }}
             columns={adminColumns}
             dataSource={applications}
             onChange={onChange}
+            locale={{
+              emptyText: (
+                <span>
+                  No Applicants Found <br />
+                  <InboxOutlined className="text-3xl" />
+                </span>
+              ),
+            }}
           />
         </div>
       ) : (
@@ -272,143 +316,8 @@ const JobApplications = () => {
           </Button>
         </div>
       )}
-      another Modal
-    </div>
+    </>
   );
 };
 
 export default JobApplications;
-const applications = [];
-const anotherModal = (
-  <div className="flex gap-3 flex-wrap min-w-full justify-center md:justify-start  ">
-    {applications?.map((elem, index) => (
-      <div
-        className="sm:w-full lg:w-[49%]  border rounded-md bg-slate-200 p-4 shadow-md shadow-slate-400 hover:bg-gray-200  hover:shadow-none "
-        key={index}
-      >
-        <div className="text-2xl font-bold text-center mb-4">
-          Applicant Details
-        </div>
-        <div className="flex flex-grow my-2 ">
-          <div className="w-1/4 md:w-1/3 xl:ml-11 xl:text-lg  mx-3 text-left ml-5 grow  ">
-            Name:
-          </div>
-          <div
-            className=" w-3/4 md:w-2/3 xl:ml-11 xl:text-lg mx-3 text-left grow cursor-pointer  "
-            title={elem.userName}
-          >
-            {elem.userName}
-          </div>
-        </div>
-        <div className="flex flex-grow my-2">
-          <div className=" w-1/4 md:w-1/3 xl:ml-11 xl:text-lg  mx-3 text-left ml-5 grow  ">
-            DOB:
-          </div>
-          <div
-            className=" w-3/4 md:w-2/3 xl:ml-11 xl:text-lg mx-3 text-left grow cursor-pointer  "
-            title={elem.DOB}
-          >
-            {elem.DOB}
-          </div>
-        </div>
-        <div className="flex flex-grow my-2">
-          <div className=" w-1/4 md:w-1/3 xl:ml-11 xl:text-lg  mx-3 text-left ml-5 grow  ">
-            email :{" "}
-          </div>
-          <div
-            className=" w-3/4 md:w-2/3 xl:ml-11 xl:text-lg mx-3 text-left grow cursor-pointer  "
-            title={elem.email}
-          >
-            {elem.email}
-          </div>
-        </div>
-        <div className="flex flex-grow my-2">
-          <div className=" w-1/4 md:w-1/3 xl:ml-11 xl:text-lg  mx-3 text-left ml-5 grow  ">
-            contact:
-          </div>
-          <div
-            className=" w-3/4 md:w-2/3 xl:ml-11 xl:text-lg mx-3 text-left grow cursor-pointer  "
-            title={elem.mobileNumber}
-          >
-            {elem.mobileNumber}
-          </div>
-        </div>
-        <div className="flex flex-grow my-2">
-          <div className=" w-1/4 md:w-1/3 xl:ml-11 xl:text-lg  mx-3 text-left ml-5 grow  ">
-            Address:{" "}
-          </div>
-          <div
-            className=" w-3/4 md:w-2/3 xl:ml-11 xl:text-lg mx-3 text-left grow cursor-pointer line-clamp-2 "
-            title={elem.address}
-          >
-            {elem.address}
-          </div>
-        </div>
-        <div className="flex flex-grow my-2">
-          <div className=" w-1/4 md:w-1/3 xl:ml-11 xl:text-lg  mx-3 text-left ml-5 grow  ">
-            About:
-          </div>
-          <div
-            className=" w-3/4 md:w-2/3 xl:ml-11 xl:text-lg mx-3 text-left grow cursor-pointer line-clamp-4 "
-            title={elem.Bio}
-          >
-            {elem.Bio}
-          </div>
-        </div>
-        <div className="flex flex-grow my-2">
-          <div className=" w-1/4 md:w-1/3 xl:ml-11 xl:text-lg  mx-3 text-left ml-5 grow  ">
-            University:
-          </div>
-          <div
-            className=" w-3/4 md:w-2/3 xl:ml-11 xl:text-lg mx-3 text-left grow cursor-pointer  "
-            title={elem.university}
-          >
-            {elem.university}
-          </div>
-        </div>
-        <div className="flex flex-grow my-2">
-          <div className=" w-1/4 md:w-1/3 xl:ml-11 xl:text-lg  mx-3 text-left ml-5 grow  ">
-            Degree:
-          </div>
-          <div
-            className=" w-3/4 md:w-2/3 xl:ml-11 xl:text-lg mx-3 text-left grow cursor-pointer  "
-            title={elem.degree}
-          >
-            {elem.degree}
-          </div>
-        </div>
-        <div className="flex flex-grow my-2">
-          <div className=" w-1/4 md:w-1/3 xl:ml-11 xl:text-lg  mx-3 text-left ml-5 grow  ">
-            CGPA:
-          </div>
-          <div
-            className=" w-3/4 md:w-2/3 xl:ml-11 xl:text-lg mx-3 text-left grow cursor-pointer  "
-            title={elem.CGPA}
-          >
-            {elem.CGPA}
-          </div>
-        </div>
-        <div className="flex flex-grow my-2">
-          {/* <div className=" w-1/4 md:w-1/3 xl:ml-11 xl:text-lg  mx-3 text-left ml-5 grow  ">
-                  resume:
-                </div> */}
-          <div className=" w-3/4 md:w-2/3 lg:w-1/2 lg:text-lg text-center grow  ">
-            <Link href={elem.resume}>Download Resume</Link>
-          </div>
-        </div>
-        <div className=" text-center">
-          <Button
-            className="w-10/12 "
-            type="primary"
-            onClick={() => {
-              setApplicantData(elem);
-              setIsModalOpen(true);
-            }}
-          >
-            Schedule Interview
-          </Button>
-        </div>
-      </div>
-    ))}
-  </div>
-);
