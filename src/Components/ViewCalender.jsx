@@ -262,20 +262,16 @@ const ViewCalender = ({ updateEvent }) => {
           }}
           onOk={() => {
             console.log(modalData.id);
-            if (modalData.isActive === true) {
-              message.success("Processing...!");
-              addJobApplicationInFireStore(modalData.id).then((res) => {
-                console.log(
-                  res,
-                  "response from Fire-Store on successful Job Application"
-                );
-                message.success("Job Application Send Successfully!");
-              });
-              // adding sub collection data for job application here
-              setIsModalOpen(false);
-            } else {
-              message.warn("Profile Not Activated!");
-            }
+            message.success("Processing...!");
+            addJobApplicationInFireStore(modalData.id).then((res) => {
+              console.log(
+                res,
+                "response from Fire-Store on successful Job Application"
+              );
+              message.success("Job Application Send Successfully!");
+            });
+            // adding sub collection data for job application here
+            setIsModalOpen(false);
           }}
         >
           <ViewEventModal data={modalData} />
