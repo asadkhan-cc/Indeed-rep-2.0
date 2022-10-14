@@ -202,47 +202,49 @@ const ViewCalender = ({ updateEvent }) => {
   console.log(userAuthDetailContext, "  userAuthDetailContext");
   return (
     <>
-      <div style={{ height: 600 }}>
-        {collectionData ? (
-          <Calendar
-            events={collectionData}
-            localizer={localizer}
-            Views={["month", "day", "Week"]}
-            defaultDate={defaultDate}
-            defaultView="month"
-            startAccessor="start"
-            endAccessor="end"
-            style={{ height: 600 }}
-            // components={{
-            //   eventWrapper: EventWrapper,
-            // }}
-            eventPropGetter={(myEventsList) => {
-              const bgcolor =
-                myEventsList.type == "Interview" ? "#28a745" : "#1890ff";
-              const color =
-                myEventsList.type == "Interview" ? "white" : "white";
-              const Weight =
-                myEventsList.type == "Interview" ? "bold" : "normal";
+      <div style={{ height: 600, overflow: "auto" }}>
+        <div style={{ maxHeight: 500, minWidth: 630 }}>
+          {collectionData ? (
+            <Calendar
+              events={collectionData}
+              localizer={localizer}
+              Views={["month", "day", "Week"]}
+              defaultDate={defaultDate}
+              defaultView="month"
+              startAccessor="start"
+              endAccessor="end"
+              style={{ height: 600 }}
+              // components={{
+              //   eventWrapper: EventWrapper,
+              // }}
+              eventPropGetter={(myEventsList) => {
+                const bgcolor =
+                  myEventsList.type == "Interview" ? "#28a745" : "#1890ff";
+                const color =
+                  myEventsList.type == "Interview" ? "white" : "white";
+                const Weight =
+                  myEventsList.type == "Interview" ? "bold" : "normal";
 
-              return {
-                style: {
-                  backgroundColor: bgcolor,
-                  color: color,
-                  fontWeight: Weight,
-                },
-              };
-            }}
-            // fontSize: "0.1rem",
-            // onDoubleClickEvent={onDoubleClickEvent}
-            onSelectEvent={onSelectEvent}
-          />
-        ) : (
-          <div className="text-center">
-            <Button loading={true} disabled>
-              Loading
-            </Button>
-          </div>
-        )}
+                return {
+                  style: {
+                    backgroundColor: bgcolor,
+                    color: color,
+                    fontWeight: Weight,
+                  },
+                };
+              }}
+              // fontSize: "0.1rem",
+              // onDoubleClickEvent={onDoubleClickEvent}
+              onSelectEvent={onSelectEvent}
+            />
+          ) : (
+            <div className="text-center">
+              <Button loading={true} disabled>
+                Loading
+              </Button>
+            </div>
+          )}
+        </div>
       </div>
       {/* Conditional Rendering STUDENTS MODAL BELOW for role = User */}
       {userAuthDetailContext?.profileData?.role === "User" ? (
@@ -259,17 +261,21 @@ const ViewCalender = ({ updateEvent }) => {
             setIsModalOpen(false);
           }}
           onOk={() => {
-            message.success("Processing...!");
             console.log(modalData.id);
-            addJobApplicationInFireStore(modalData.id).then((res) => {
-              console.log(
-                res,
-                "response from Fire-Store on successful Job Application"
-              );
-              message.success("Job Application Send Successfully!");
-            });
-            // adding sub collection data for job application here
-            setIsModalOpen(false);
+            if (modalData.isActive === true) {
+              message.success("Processing...!");
+              addJobApplicationInFireStore(modalData.id).then((res) => {
+                console.log(
+                  res,
+                  "response from Fire-Store on successful Job Application"
+                );
+                message.success("Job Application Send Successfully!");
+              });
+              // adding sub collection data for job application here
+              setIsModalOpen(false);
+            } else {
+              message.warn("Profile Not Activated!");
+            }
           }}
         >
           <ViewEventModal data={modalData} />

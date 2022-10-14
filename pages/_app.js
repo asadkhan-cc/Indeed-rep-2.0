@@ -48,22 +48,6 @@ function MyApp({ Component, pageProps }) {
     if (user !== null) {
       gettingDocumentFromFirestore();
     }
-    console.log(
-      user?.metadata.creationTime != user?.metadata.lastSignInTime,
-      "user?.metadata.creationTime != user?.metadata.lastSignInTime"
-    );
-    if (
-      profileData === null &&
-      user?.metadata.creationTime != user?.metadata.lastSignInTime
-    ) {
-      // alert("settimeout");
-      const myTimeOut = setTimeout(() => {
-        setGetUserData(false);
-      }, 10000);
-      return () => {
-        clearTimeout(myTimeOut);
-      };
-    }
   }, [user?.email, getUserData, reRender]);
 
   return (

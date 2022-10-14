@@ -19,6 +19,7 @@ const SignUpUserPage = () => {
       title: "First",
       content: (
         <SignIn
+          role="User"
           setCredentials={getCredentials}
           current={current}
           change_Next={next}

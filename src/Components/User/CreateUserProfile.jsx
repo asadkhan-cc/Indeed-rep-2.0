@@ -52,6 +52,23 @@ export const CreateUserProfile = (props) => {
   }-${currentDate.getFullYear()}on${currentDate.getHours()}:${currentDate.getMinutes()}:${currentDate.getSeconds()}`;
   const imagesListRef = ref(storage, "Resume/");
 
+  const createUserWithDummyData = (user) => {
+    const values = {
+      userName: user.displayName,
+      email: user.email,
+      emailVerified: true,
+      isActive: null,
+      isAdmin: false,
+      role: "User",
+    };
+    setDoc(doc(db, "users", user.email), user).then((eve) => {
+      console.log("Document written with ID: ", auth.currentUser?.email);
+      message.Warn(
+        "Some Error Occurred while Creating Profile Kindly Update Your Data "
+      );
+      Router.push("/profile");
+    });
+  };
   const uploadFile = async () => {
     if (imageUpload == null) return { snapshot: null, url: null };
     const imageRef = ref(
@@ -122,7 +139,7 @@ export const CreateUserProfile = (props) => {
             props.credentials?.confirmPassword
           );
         } catch (err) {
-          await deleteUser(user);
+          createUserWithDummyData(values);
           message.error("Error SigningUp!");
           console.error(err);
           message.error(
