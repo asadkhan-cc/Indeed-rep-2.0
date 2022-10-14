@@ -36,7 +36,7 @@ const AdminProfilePage = () => {
         console.log(res.length);
 
         const data = res.filter((elem) => {
-          if (elem.role == "admin" || elem.role == "Admin") {
+          if (elem?.role == "admin" || elem?.role == "Admin") {
             return;
           } else {
             return elem;
@@ -58,7 +58,7 @@ const AdminProfilePage = () => {
   const filterProfileData = (param) => {
     const filteredData = param?.map((elem) => {
       console.log(elem);
-      if (elem.role == "admin" || elem.role == "Admin") {
+      if (elem?.role == "admin" || elem?.role == "Admin") {
       } else {
         return elem;
       }
@@ -119,8 +119,8 @@ const AdminProfilePage = () => {
         },
       ],
       filterSearch: true,
-      onFilter: (value, record) => record.city.indexOf(value) === 0,
-      sorter: (a, b) => a.city.length - b.city.length,
+      onFilter: (value, record) => record?.city?.indexOf(value) === 0,
+      sorter: (a, b) => a?.city?.length - b?.city?.length,
       sortDirections: ["descend", "ascend"],
       defaultSortOrder: "descend",
     },
@@ -212,8 +212,8 @@ const AdminProfilePage = () => {
         },
       ],
       filterSearch: true,
-      onFilter: (value, record) => record.role.indexOf(value) === 0,
-      sorter: (a, b) => a.role.length - b.role.length,
+      onFilter: (value, record) => record?.role.indexOf(value) === 0,
+      sorter: (a, b) => a?.role.length - b?.role.length,
       sortDirections: ["descend", "ascend"],
       defaultSortOrder: "descend",
     },
