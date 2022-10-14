@@ -81,7 +81,7 @@ const UpdateCompanyProfile = (props) => {
     <div>
       <p className="text-center">Update Company Profile</p>
 
-      <div className="text-right">
+      <div className="text-center sm:text-right">
         Edit Profile :{" "}
         <Switch
           defaultChecked={false}
@@ -111,8 +111,8 @@ const UpdateCompanyProfile = (props) => {
         <div className="flex flex-grow justify-center align-middle items-center text-center">
           <h1>
             Profile Activation Status :{" "}
-            {profileData.isActive !== null ? (
-              profileData.isActive === true ? (
+            {profileData.isActive != "null" ? (
+              profileData.isActive == "true" ? (
                 <Tag color="green">Active</Tag>
               ) : (
                 <Tag color="red">InActive</Tag>

@@ -52,6 +52,7 @@ const JobApplications = () => {
   };
   const getJobApplications = async () => {
     const { jobApplications } = await router.query;
+
     try {
       if (jobApplications) {
         const path = await `/jobEvents/${jobApplications}/jobApplications`;
@@ -59,9 +60,9 @@ const JobApplications = () => {
         const applicationsSnapshot = await getDocs(collectionRef);
         const applicationData = await applicationsSnapshot.docs;
         const data = [];
-        await applicationData.forEach((doc) => {
+        await applicationData?.forEach((doc) => {
           console.log(1);
-          data.push(doc.data());
+          data?.push(doc?.data());
         });
         setApplications(data);
         return data;
@@ -129,8 +130,8 @@ const JobApplications = () => {
         },
       ],
       filterSearch: true,
-      onFilter: (value, record) => record.city.indexOf(value) === 0,
-      sorter: (a, b) => a.city.length - b.city.length,
+      onFilter: (value, record) => record?.city?.indexOf(value) === 0,
+      sorter: (a, b) => a?.city?.length - b?.city?.length,
       sortDirections: ["descend", "ascend"],
       defaultSortOrder: "descend",
     },
@@ -143,16 +144,101 @@ const JobApplications = () => {
       title: "University",
       dataIndex: "university",
       key: "university",
+      filters: [
+        {
+          text: "KU",
+          value: "Karachi University",
+        },
+        {
+          text: "IU",
+          value: "Iqra University",
+        },
+        {
+          text: "IBA",
+          value: "IBA",
+        },
+        {
+          text: "LUMS",
+          value: "LUMS",
+        },
+        {
+          text: "FAST",
+          value: "Fast",
+        },
+        {
+          text: "FUUAST",
+          value: "Fuuast",
+        },
+      ],
+      filterSearch: true,
+      onFilter: (value, record) => record?.university?.indexOf(value) === 0,
+      sorter: (a, b) => a?.university?.length - b?.university?.length,
+      sortDirections: ["descend", "ascend"],
+      defaultSortOrder: "descend",
     },
     {
       title: "Degree",
       dataIndex: "degree",
       key: "degree",
+      filters: [
+        {
+          text: "BSSE",
+          value: "BSSE",
+        },
+        {
+          text: "Engineering",
+          value: "Engineering",
+        },
+        {
+          text: "BSCS",
+          value: "BSCS",
+        },
+        {
+          text: "BBA",
+          value: "BBA",
+        },
+        {
+          text: "B.Com",
+          value: "B.Com",
+        },
+        {
+          text: "BA",
+          value: "BA",
+        },
+      ],
+      filterSearch: true,
+      onFilter: (value, record) => record?.degree?.indexOf(value) === 0,
+      sorter: (a, b) => a?.degree?.length - b?.degree?.length,
+      sortDirections: ["descend", "ascend"],
+      defaultSortOrder: "descend",
     },
     {
       title: "CGPA",
       dataIndex: "CGPA",
       key: "CGPA",
+      filters: [
+        {
+          text: "2",
+          value: "2",
+        },
+        {
+          text: "2.5",
+          value: "2.5",
+        },
+        {
+          text: "3",
+          value: "3",
+        },
+        {
+          text: "3.5",
+          value: "3.5",
+        },
+      ],
+      filterSearch: true,
+      onFilter: (value, record) => record?.CGPA >= parseFloat(value) + 0.5,
+      sorter: (a, b) => a?.CGPA - b?.CGPA,
+      sortDirections: ["descend", "ascend"],
+      defaultSortOrder: "descend",
     },
     {
       title: "Profile Status",
@@ -228,7 +314,7 @@ const JobApplications = () => {
         <Space size="middle">
           <a
             onClick={(e) => {
-              if (userAuthDetailContext.profileData.role !== "Admin") {
+              if (userAuthDetailContext.profileData?.role !== "Admin") {
                 setApplicantData(record);
                 setInterviewIsModalOpen(true);
               } else {

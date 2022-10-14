@@ -51,11 +51,11 @@ const ViewEventModal = (props) => {
               </span>
             </p>
           )}
-          <p className="flex-col md:flex md:relative">
+          <div className=" h-16 flex-col md:flex md:relative">
             <span className="w-48 text-left mr-4 font-bold text-lg">
               Desc:{" "}
             </span>
-            <span className=" w-48 text-left line-clamp-3 md:absolute right-20">
+            <span className=" w-48 h-16 text-left line-clamp-3 md:absolute right-20">
               <Tooltip
                 placement="left"
                 title={
@@ -65,7 +65,7 @@ const ViewEventModal = (props) => {
                 {props.data.desc || props.data.Desc || "No Description Given"}
               </Tooltip>
             </span>
-          </p>
+          </div>
 
           <p className="flex-col md:flex md:relative">
             {props.data.allDay ? yes : no}

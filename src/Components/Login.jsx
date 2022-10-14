@@ -14,7 +14,6 @@ const Login = () => {
       console.log("user from login page", user);
       router.push("/dashboard");
       if (user !== undefined) {
-        alert("WHAT WHAT!!!");
       }
       // openNotificationWithIcon("sucess", "Sucessful");
     } catch (error) {

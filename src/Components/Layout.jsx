@@ -153,7 +153,7 @@ function SiteLayout({ children }) {
       "/contact"
     ),
     getItem(
-      "Login",
+      "LogOut",
       "4",
       <Link href={"/logOut"}>
         <div className="w-[200px] mx-auto h-auto">
@@ -233,7 +233,7 @@ function SiteLayout({ children }) {
             }}
           >
             <div className="relative">
-              <div className="absolute right-3 text-white text-right mr-3">
+              <div className="absolute right-3 text-white text-right mr-3 w-xs overflow-x-hidden ">
                 {userAuthDetailContext?.profileData ? (
                   <>
                     Activation Status :{" "}
@@ -297,7 +297,7 @@ function SiteLayout({ children }) {
               textAlign: "center",
             }}
           >
-            Indeed Replica ©2022 Created by Asad Khan
+            Campus Recruitment System ©2022 Created by Asad Khan
           </Footer>
         </Layout>
       </Layout>

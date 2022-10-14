@@ -14,7 +14,7 @@ const JobDetails = (props) => {
     </>
   );
   return (
-    <div className="sm:w-full   border rounded-md  p-4 mb-4 shadow-md shadow-slate-700">
+    <div className="w-full xl:w-10/12 text-xs lg:text-lg   border rounded-md  p-4 mb-4 shadow-md shadow-slate-700">
       <div className="text-2xl font-bold text-center mb-4">Job Details</div>
       {/* <div className="flex flex-grow my-2">
       <div className=" w-1/3 lg:w-1/2 lg:text-lg lg:pl-20">Job ID:</div>
@@ -53,7 +53,20 @@ const JobDetails = (props) => {
         >
           {jobDesc.createdByName}
         </div>
-      </div>{" "}
+      </div>
+      {jobDesc.updatedBy && (
+        <div className="flex flex-grow my-2 items-center">
+          <div className=" w-1/3 lg:w-1/2 lg:text-lg lg:pl-20">
+            Event Updated by :
+          </div>
+          <div
+            className=" text-left grow cursor-pointer  "
+            title={jobDesc.updatedBy}
+          >
+            {jobDesc.updatedBy}
+          </div>
+        </div>
+      )}{" "}
       <div className="flex flex-grow my-2 items-center">
         <div className=" w-1/3 lg:w-1/2 lg:text-lg lg:pl-20">Starts At :</div>
         <div
@@ -77,7 +90,7 @@ const JobDetails = (props) => {
           Description :
         </div>
         <div
-          className=" text-left grow cursor-pointer line-clamp-4 "
+          className=" w-1/3 lg:w-1/2 first-letter:text-left grow cursor-pointer line-clamp-4 "
           title={jobDesc.desc}
         >
           {jobDesc.desc}
