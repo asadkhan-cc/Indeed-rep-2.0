@@ -1,4 +1,5 @@
 import { onAuthStateChanged } from "firebase/auth";
+import Head from "next/head";
 import { useRouter } from "next/router";
 import React, { useState } from "react";
 import { auth, logout } from "../FirebaseApp/firebase-config";
@@ -13,12 +14,17 @@ const LogOut = () => {
   };
   if (user) {
     return (
-      <div className="sm:w-2/5 w-full  shadow rounded p-2 my-10 mx-auto text-center ">
-        <p>Are You Sure!</p>
-        <button onClick={signOut} className="ant-btn-primary p-2 rounded ">
-          LogOut
-        </button>
-      </div>
+      <>
+        <Head>
+          <title>LogOut</title>
+        </Head>
+        <div className="sm:w-2/5 w-full  shadow rounded p-2 my-10 mx-auto text-center ">
+          <p>Are You Sure!</p>
+          <button onClick={signOut} className="ant-btn-primary p-2 rounded ">
+            LogOut
+          </button>
+        </div>
+      </>
     );
   } else {
     return (

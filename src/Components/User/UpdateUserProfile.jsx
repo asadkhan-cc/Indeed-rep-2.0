@@ -134,7 +134,7 @@ const UpdateUserProfile = (props) => {
     toggle();
     router.push("/profile");
   };
-  console.log(profileData);
+  console.log(profileData.isActive);
   return (
     <div>
       <div className="text-center sm:text-right">
@@ -167,9 +167,10 @@ const UpdateUserProfile = (props) => {
         <div className="flex flex-grow justify-center align-middle items-center text-center">
           <h1>
             Profile Activation Status :{" "}
-            {profileData.isActive == "null" ? (
+            {profileData.isActive == "null" || profileData.isActive == null ? (
               <Tag color="yellow">Pending..</Tag>
-            ) : profileData.isActive == "true" ? (
+            ) : profileData.isActive == "true" ||
+              profileData.isActive == true ? (
               <Tag color="green">Active</Tag>
             ) : (
               <Tag color="red">InActive</Tag>

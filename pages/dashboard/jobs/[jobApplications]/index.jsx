@@ -8,6 +8,7 @@ import {
   getDocs,
   query,
 } from "firebase/firestore";
+import Head from "next/head";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import React, { useContext, useEffect, useState } from "react";
@@ -341,6 +342,9 @@ const JobApplications = () => {
   };
   return (
     <>
+      <Head>
+        <title>Job Applicants</title>
+      </Head>
       <div className="flex gap-3 flex-wrap min-w-full justify-center  ">
         {jobDesc !== null ? (
           jobDesc !== undefined ? (

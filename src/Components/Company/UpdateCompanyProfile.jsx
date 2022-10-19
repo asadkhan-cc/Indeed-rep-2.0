@@ -111,14 +111,13 @@ const UpdateCompanyProfile = (props) => {
         <div className="flex flex-grow justify-center align-middle items-center text-center">
           <h1>
             Profile Activation Status :{" "}
-            {profileData.isActive != "null" ? (
-              profileData.isActive == "true" ? (
-                <Tag color="green">Active</Tag>
-              ) : (
-                <Tag color="red">InActive</Tag>
-              )
-            ) : (
+            {profileData.isActive == "null" || profileData.isActive == null ? (
               <Tag color="yellow">Pending..</Tag>
+            ) : profileData.isActive == "true" ||
+              profileData.isActive == true ? (
+              <Tag color="green">Active</Tag>
+            ) : (
+              <Tag color="red">InActive</Tag>
             )}
           </h1>
         </div>
