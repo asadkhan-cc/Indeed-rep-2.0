@@ -1,3 +1,4 @@
+import Head from "next/head";
 import React, { useContext } from "react";
 import LoginErr from "../../src/Components/LoginErr";
 import AdminProfilePage from "../../src/Pages/Admin/AdminProfilePage";
@@ -8,17 +9,22 @@ const Profile = () => {
   const userAuthDetailContext = useContext(userAuthDetail);
   console.log(userAuthDetailContext);
   return (
-    <div>
-      {userAuthDetailContext?.user?.email ? (
-        userAuthDetailContext?.profileData?.role == "Admin" ? (
-          <AdminProfilePage />
+    <>
+      <Head>
+        <title>Profile</title>
+      </Head>
+      <div>
+        {userAuthDetailContext?.user?.email ? (
+          userAuthDetailContext?.profileData?.role == "Admin" ? (
+            <AdminProfilePage />
+          ) : (
+            <ProfilePage />
+          )
         ) : (
-          <ProfilePage />
-        )
-      ) : (
-        <LoginErr />
-      )}
-    </div>
+          <LoginErr />
+        )}
+      </div>
+    </>
   );
 };
 

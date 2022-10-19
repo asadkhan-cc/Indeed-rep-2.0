@@ -1,3 +1,4 @@
+import Head from "next/head";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -14,6 +15,9 @@ function NotFound() {
 
   return (
     <div className="w-1/2 mx-auto text-center">
+      <Head>
+        <title>404 Page Not Found</title>
+      </Head>
       <Image
         alt="404 error Page not fouond"
         src={img404}

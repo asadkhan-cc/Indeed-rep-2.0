@@ -1,5 +1,6 @@
 import { async } from "@firebase/util";
 import { onAuthStateChanged } from "firebase/auth";
+import Head from "next/head";
 import React, { useContext, useState } from "react";
 import { auth } from "../../FirebaseApp/firebase-config";
 import CreateEvent from "../../src/Components/Company/CreateEvent";
@@ -23,21 +24,26 @@ const Dashboard = () => {
   // );
   // console.log(userAuthDetailContext);
   return (
-    <div>
-      {userAuthDetailContext?.user ? (
-        userAuthDetailContext?.profileData?.role === "Admin" ? (
-          <DashBoardPageAdmin />
-        ) : userAuthDetailContext?.profileData?.role === "User" ? (
-          <DashBoardPageStudent />
-        ) : userAuthDetailContext?.profileData?.role === "Company" ? (
-          <DashBoardPageCompany />
+    <>
+      <Head>
+        <title>DashBoard</title>
+      </Head>
+      <div>
+        {userAuthDetailContext?.user ? (
+          userAuthDetailContext?.profileData?.role === "Admin" ? (
+            <DashBoardPageAdmin />
+          ) : userAuthDetailContext?.profileData?.role === "User" ? (
+            <DashBoardPageStudent />
+          ) : userAuthDetailContext?.profileData?.role === "Company" ? (
+            <DashBoardPageCompany />
+          ) : (
+            <Loading />
+          )
         ) : (
-          <Loading />
-        )
-      ) : (
-        <LoginErr />
-      )}
-    </div>
+          <LoginErr />
+        )}
+      </div>
+    </>
   );
 };
 

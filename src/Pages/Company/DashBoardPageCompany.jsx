@@ -22,7 +22,11 @@ const DashBoardPageCompany = () => {
         <div className="my-2 mb-9 align-middle text-center">
           <Button
             onClick={() => {
-              setViewCreateEvent(false);
+              if (userAuthDetailContext?.profileData?.isActive == true) {
+                setViewCreateEvent(false);
+              } else {
+                message.warn("Profile Not Activated By Admin");
+              }
             }}
             type="primary"
           >
